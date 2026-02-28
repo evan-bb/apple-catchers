@@ -113,6 +113,7 @@
 <div class="screen off" id="sMenu">
   <div class="logo">🍎 Apple Catchers</div>
     <button id="btnUpdate" style="position:absolute;top:max(env(safe-area-inset-top,0px),14px);right:14px;background:rgba(255,214,0,.15);border:1.5px solid rgba(255,214,0,.4);border-radius:12px;padding:6px 11px;color:#ffd600;font-family:'Fredoka One',cursive;font-size:.72rem;cursor:pointer;">🆕 Updates</button>
+  <div id="menuUser" style="display:none" class="menu-user">Playing as <b id="menuUsername"></b></div>
   <div class="menu-coins"><div class="mc-coin"></div><span id="menuCoins">0</span></div>
   <div id="menuProgress" style="color:rgba(255,255,255,.55);font-size:.8rem;font-weight:700;text-align:center;"></div>
   <div class="mode-row">
@@ -121,6 +122,8 @@
   </div>
   <button class="big-btn btn-play" id="btnPlay">▶ Play</button>
   <button class="big-btn btn-shop-menu" id="btnMenuShop">🛒 Shop</button>
+  <button class="big-btn btn-account" id="btnAccount">👤 Account</button>
+  <button class="big-btn btn-lb" id="btnLeaderboard">🏆 Leaderboard</button>
 </div>
 
 <!-- Fullscreen tap-to-start — the ONLY reliable cross-browser audio trigger -->
@@ -239,6 +242,37 @@
     <div class="cr-end-spacer"></div>
   </div>
   <button id="btnSkipCredits" style="position:fixed;bottom:max(env(safe-area-inset-bottom,0px),20px);left:50%;transform:translateX(-50%);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:10px 28px;color:rgba(255,255,255,.6);font-family:'Fredoka One',cursive;font-size:.9rem;cursor:pointer;z-index:10;">Skip ▶</button>
+</div>
+
+<!-- ═══ ACCOUNT ═══ -->
+<div class="screen off" id="sAccount">
+  <div class="acc-title">👤 Account</div>
+  <div id="accLoggedOut">
+    <input type="text" id="accUser" placeholder="Username" maxlength="15" autocomplete="off">
+    <input type="password" id="accPass" placeholder="Password" maxlength="30">
+    <div id="accError" class="acc-error"></div>
+    <button class="big-btn btn-play" id="btnSignUp">✏️ Sign Up</button>
+    <button class="big-btn btn-grey" id="btnLogIn">🔑 Log In</button>
+  </div>
+  <div id="accLoggedIn" style="display:none">
+    <div class="acc-welcome">Welcome, <b id="accName"></b>!</div>
+    <button class="big-btn btn-grey" id="btnLogOut">👋 Log Out</button>
+  </div>
+  <button class="big-btn btn-grey" id="btnAccBack">🏠 Menu</button>
+</div>
+
+<!-- ═══ LEADERBOARD ═══ -->
+<div class="screen off" id="sLeaderboard">
+  <div class="lb-header">
+    <div class="lb-title">🏆 Leaderboard</div>
+    <button class="btn-back" id="btnLbBack">← Back</button>
+  </div>
+  <div class="lb-tabs">
+    <button class="lb-tab active" id="lbTabClassic">🍎 Classic</button>
+    <button class="lb-tab" id="lbTabTimer">⏱️ Timer</button>
+  </div>
+  <div id="lbLoading" class="lb-loading">Loading...</div>
+  <div class="lb-list" id="lbList"></div>
 </div>
 
 <!-- ═══ CHEST OPEN OVERLAY ═══ -->

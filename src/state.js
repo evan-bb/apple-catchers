@@ -34,6 +34,9 @@ export const state = {
   bi: 0,
   trk: '',
 
+  // Auth
+  user: null,
+
   // Other
   dangerEl: null,
   activeEffects: {},

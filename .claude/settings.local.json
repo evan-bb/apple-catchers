@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git clone https://github.com/evan-bb/apple-catchers.git .)",
+      "Bash(git init)",
+      "Bash(git remote add origin https://github.com/evan-bb/apple-catchers.git)",
+      "Bash(git pull origin main)",
+      "Bash(npm install)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(ls /c/Users/Evan/code/apple-catchers/node_modules/.bin/vite*)",
+      "Bash(git add index.html Apple-Catchers.html)",
+      "Bash(git commit:*)",
+      "Bash(git config user.name \"evanbb\")",
+      "Bash(git config user.email \"evanbb@users.noreply.github.com\")",
+      "Bash(git checkout -b rename-new-to-updates)",
+      "Bash(git push -u origin rename-new-to-updates)",
+      "Bash(gh pr:*)",
+      "Bash(git checkout master)",
+      "Bash(git merge rename-new-to-updates)",
+      "Bash(git branch -D rename-new-to-updates)",
+      "Bash(git branch -m master main)",
+      "Bash(git branch --set-upstream-to=origin/main main)",
+      "Bash(git push origin main)"
+    ]
+  }
+}

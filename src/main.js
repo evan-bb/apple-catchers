@@ -5,6 +5,7 @@ import { updateAllCoins, showScreen, showCredits, openShop, updateHUD } from './
 import { resize, startGame, draw, initGameListeners } from './game.js';
 import { usePower } from './powerups.js';
 import { initAudio, playTrack, toggleMute } from './audio.js';
+import { onAuthChange, signUp, logIn, logOut, getLeaderboard } from './firebase.js';
 
 // ── Set up canvas refs ──────────────────────────
 state.cvs = document.getElementById('cvs');
@@ -97,3 +98,140 @@ document.getElementById('btnSkipCredits').addEventListener('click', () => {
 
 // ── Music toggle ────────────────────────────────
 document.getElementById('btnMusic').addEventListener('click', toggleMute);
+
+// ══════════════════════════════════════════════════
+//  ACCOUNTS + LEADERBOARD
+// ══════════════════════════════════════════════════
+
+// ── Auth state listener ─────────────────────────
+onAuthChange((user) => {
+  state.user = user;
+  const menuUser = document.getElementById('menuUser');
+  const menuUsername = document.getElementById('menuUsername');
+  if (user) {
+    menuUser.style.display = '';
+    menuUsername.textContent = user.displayName;
+  } else {
+    menuUser.style.display = 'none';
+  }
+});
+
+// ── Account screen ──────────────────────────────
+document.getElementById('btnAccount').addEventListener('click', () => {
+  const loggedIn = document.getElementById('accLoggedIn');
+  const loggedOut = document.getElementById('accLoggedOut');
+  if (state.user) {
+    loggedIn.style.display = '';
+    loggedOut.style.display = 'none';
+    document.getElementById('accName').textContent = state.user.displayName;
+  } else {
+    loggedIn.style.display = 'none';
+    loggedOut.style.display = '';
+    document.getElementById('accUser').value = '';
+    document.getElementById('accPass').value = '';
+  }
+  document.getElementById('accError').textContent = '';
+  showScreen('sAccount');
+});
+
+document.getElementById('btnAccBack').addEventListener('click', () => {
+  showScreen('sMenu');
+});
+
+document.getElementById('btnSignUp').addEventListener('click', async () => {
+  const user = document.getElementById('accUser').value.trim();
+  const pass = document.getElementById('accPass').value;
+  const err = document.getElementById('accError');
+  err.textContent = '';
+  if (!user || !pass) { err.textContent = 'Fill in both fields!'; return; }
+  if (pass.length < 6) { err.textContent = 'Password must be at least 6 characters!'; return; }
+  const result = await signUp(user, pass);
+  if (result.ok) {
+    showScreen('sMenu');
+  } else {
+    err.textContent = result.error;
+  }
+});
+
+document.getElementById('btnLogIn').addEventListener('click', async () => {
+  const user = document.getElementById('accUser').value.trim();
+  const pass = document.getElementById('accPass').value;
+  const err = document.getElementById('accError');
+  err.textContent = '';
+  if (!user || !pass) { err.textContent = 'Fill in both fields!'; return; }
+  const result = await logIn(user, pass);
+  if (result.ok) {
+    showScreen('sMenu');
+  } else {
+    err.textContent = result.error;
+  }
+});
+
+document.getElementById('btnLogOut').addEventListener('click', async () => {
+  await logOut();
+  showScreen('sMenu');
+});
+
+// ── Leaderboard screen ──────────────────────────
+let lbMode = 'classic';
+
+async function loadLeaderboard(mode) {
+  const list = document.getElementById('lbList');
+  const loading = document.getElementById('lbLoading');
+  list.innerHTML = '';
+  loading.style.display = '';
+
+  try {
+    const scores = await getLeaderboard(mode);
+    loading.style.display = 'none';
+
+    if (scores.length === 0) {
+      list.innerHTML = '<div class="lb-empty">No scores yet! Be the first! 🍎</div>';
+      return;
+    }
+
+    scores.forEach((entry, i) => {
+      const row = document.createElement('div');
+      row.className = 'lb-row';
+      if (state.user && entry.username === state.user.displayName) {
+        row.classList.add('lb-me');
+      }
+      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
+      row.innerHTML =
+        '<span class="lb-rank">' + medal + '</span>' +
+        '<span class="lb-name">' + entry.username + '</span>' +
+        '<span class="lb-score">' + entry.score + '</span>';
+      list.appendChild(row);
+    });
+  } catch (e) {
+    loading.textContent = 'Could not load scores 😕';
+  }
+}
+
+document.getElementById('btnLeaderboard').addEventListener('click', () => {
+  lbMode = 'classic';
+  document.getElementById('lbTabClassic').classList.add('active');
+  document.getElementById('lbTabTimer').classList.remove('active');
+  showScreen('sLeaderboard');
+  loadLeaderboard('classic');
+});
+
+document.getElementById('lbTabClassic').addEventListener('click', () => {
+  if (lbMode === 'classic') return;
+  lbMode = 'classic';
+  document.getElementById('lbTabClassic').classList.add('active');
+  document.getElementById('lbTabTimer').classList.remove('active');
+  loadLeaderboard('classic');
+});
+
+document.getElementById('lbTabTimer').addEventListener('click', () => {
+  if (lbMode === 'timer') return;
+  lbMode = 'timer';
+  document.getElementById('lbTabTimer').classList.add('active');
+  document.getElementById('lbTabClassic').classList.remove('active');
+  loadLeaderboard('timer');
+});
+
+document.getElementById('btnLbBack').addEventListener('click', () => {
+  showScreen('sMenu');
+});

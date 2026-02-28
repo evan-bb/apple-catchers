@@ -5,6 +5,7 @@ import { addPower } from './powerups.js';
 import { drawApple } from './render.js';
 import { haltMusic, playTrack, sfxMiss } from './audio.js';
 import { renderShop } from './shop.js';
+import { saveScore } from './firebase.js';
 
 // ── Map unlock checker ───────────────────────
 export function checkMapUnlocks(total) {
@@ -123,6 +124,9 @@ export function endGame() {
 
   showScreen('sGameOver');
   updateAllCoins();
+
+  // Save score to leaderboard if logged in
+  if (state.user) saveScore(state.score, 'classic');
 }
 
 export function endTimerGame() {
@@ -147,6 +151,9 @@ export function endTimerGame() {
   setTimeout(() => { if (!state.musicMuted && state.AC) playTrack('menu'); }, 400);
   showScreen('sTimerEnd');
   updateAllCoins();
+
+  // Save score to leaderboard if logged in
+  if (state.user) saveScore(finalScore, 'timer');
 }
 
 // ═══════════════════════════════════════════════
