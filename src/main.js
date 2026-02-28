@@ -5,7 +5,8 @@ import { updateAllCoins, showScreen, showCredits, openShop, updateHUD } from './
 import { resize, startGame, draw, initGameListeners } from './game.js';
 import { usePower } from './powerups.js';
 import { initAudio, playTrack, toggleMute } from './audio.js';
-import { onAuthChange, signUp, logIn, logOut, getLeaderboard } from './firebase.js';
+import { onAuthChange, signUp, logIn, logOut, getLeaderboard, loadProgress } from './firebase.js';
+import { writeSave } from './save.js';
 
 // ── Set up canvas refs ──────────────────────────
 state.cvs = document.getElementById('cvs');
@@ -104,13 +105,42 @@ document.getElementById('btnMusic').addEventListener('click', toggleMute);
 // ══════════════════════════════════════════════════
 
 // ── Auth state listener ─────────────────────────
-onAuthChange((user) => {
+onAuthChange(async (user) => {
   state.user = user;
   const menuUser = document.getElementById('menuUser');
   const menuUsername = document.getElementById('menuUsername');
   if (user) {
     menuUser.style.display = '';
     menuUsername.textContent = user.displayName;
+    // Load cloud save and merge with local (keep the better progress)
+    const cloud = await loadProgress();
+    if (cloud) {
+      const local = state.save;
+      // Keep whichever has more coins
+      state.save.coins = Math.max(local.coins || 0, cloud.coins || 0);
+      // Keep whichever caught more apples
+      state.save.totalCaught = Math.max(local.totalCaught || 0, cloud.totalCaught || 0);
+      // Merge unlocked items (combine both lists)
+      state.save.unlockedApples = [...new Set([...(local.unlockedApples || ['classic']), ...(cloud.unlockedApples || ['classic'])])];
+      state.save.unlockedBowls = [...new Set([...(local.unlockedBowls || ['classic']), ...(cloud.unlockedBowls || ['classic'])])];
+      state.save.unlockedMaps = [...new Set([...(local.unlockedMaps || ['meadow']), ...(cloud.unlockedMaps || ['meadow'])])];
+      // Merge powers (keep the higher count of each)
+      const allPowers = { ...(cloud.powers || {}), ...(local.powers || {}) };
+      for (const key in allPowers) {
+        allPowers[key] = Math.max((local.powers || {})[key] || 0, (cloud.powers || {})[key] || 0);
+      }
+      state.save.powers = allPowers;
+      // Merge claimed rewards
+      state.save.claimedRewards = { ...(cloud.claimedRewards || {}), ...(local.claimedRewards || {}) };
+      // Keep victory if either has it
+      if (cloud.victoryShown) state.save.victoryShown = true;
+      // Keep equipped items from cloud if they exist there
+      if (cloud.equippedApple) state.save.equippedApple = cloud.equippedApple;
+      if (cloud.equippedBowl) state.save.equippedBowl = cloud.equippedBowl;
+      if (cloud.equippedMap) state.save.equippedMap = cloud.equippedMap;
+      writeSave();
+      updateAllCoins();
+    }
   } else {
     menuUser.style.display = 'none';
   }

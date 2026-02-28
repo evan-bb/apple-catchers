@@ -119,6 +119,32 @@ export async function saveScore(score, mode) {
   }
 }
 
+// ── Save Progress to Cloud ────────────────────────
+export async function saveProgress(saveData) {
+  if (!auth.currentUser) return;
+  try {
+    await setDoc(doc(db, 'progress', auth.currentUser.uid), {
+      save: JSON.parse(JSON.stringify(saveData)),
+      timestamp: serverTimestamp()
+    });
+  } catch (e) {
+    console.error('Progress save failed:', e);
+  }
+}
+
+// ── Load Progress from Cloud ─────────────────────
+export async function loadProgress() {
+  if (!auth.currentUser) return null;
+  try {
+    const snap = await getDoc(doc(db, 'progress', auth.currentUser.uid));
+    if (snap.exists()) return snap.data().save;
+    return null;
+  } catch (e) {
+    console.error('Progress load failed:', e);
+    return null;
+  }
+}
+
 // ── Get Leaderboard ───────────────────────────────
 export async function getLeaderboard(mode) {
   try {

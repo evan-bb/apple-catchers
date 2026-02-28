@@ -1,4 +1,5 @@
 import { state } from './state.js';
+import { saveProgress } from './firebase.js';
 
 export const SAVE_KEY = 'applecatch_v6';
 
@@ -11,4 +12,6 @@ export function loadSave() {
 
 export function writeSave() {
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(state.save)); } catch(e) {}
+  // Also save to cloud if logged in
+  saveProgress(state.save);
 }
