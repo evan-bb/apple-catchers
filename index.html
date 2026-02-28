@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Apple Catchers</title>
+</head>
+<body>
+
+<!-- ═══ GAME ═══ -->
+<div class="screen" id="sGame">
+  <canvas id="cvs"></canvas>
+  <div id="danger"></div>
+  <div id="hud">
+    <div class="pill"><div class="pill-coin"></div><span id="hudCoins">0</span></div>
+    <span id="hudScore">Score: 0</span>
+    <span id="hudTimer" style="display:none">2:00</span>
+    <button id="btnShop">🛒 Shop</button>
+    <button id="btnMusic">🎵</button>
+  </div>
+  <div id="timerBar" style="width:100%"></div>
+  <div id="toast"></div>
+  <div id="powerBar">
+    <div class="pw-slot empty" id="pwSlot0"><span id="pwIcon0"></span><span class="pw-slot-count" id="pwCount0"></span></div>
+    <div class="pw-slot empty" id="pwSlot1"><span id="pwIcon1"></span><span class="pw-slot-count" id="pwCount1"></span></div>
+    <div class="pw-slot empty" id="pwSlot2"><span id="pwIcon2"></span><span class="pw-slot-count" id="pwCount2"></span></div>
+  </div>
+</div>
+
+<!-- WHAT'S NEW OVERLAY -->
+<div id="updateOverlay">
+  <div id="updateBox">
+    <div class="up-title">🆕 What's New</div>
+
+    <div class="up-section">
+      <div class="up-sec-title">⚡ Power-Ups System</div>
+      <div class="up-item">
+        <div class="up-icon">🐢💰💥🧲🗺️</div>
+        <div>
+          <div class="up-name">5 Power-Ups</div>
+          <div class="up-desc">Slow, Double Coins, Destruction, Teleport, and Map Skip - use them during gameplay with the 3-slot power bar at the bottom!</div>
+        </div>
+      </div>
+      <div class="up-item">
+        <div class="up-icon">🟣</div>
+        <div>
+          <div class="up-name">Power Chest</div>
+          <div class="up-desc">200 coins in the shop - opens to give you random power-ups! Found after the Mega Chest.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="up-section">
+      <div class="up-sec-title">🗺️ 14 Total Maps!</div>
+      <div class="up-item">
+        <div class="up-icon">🌋🏜️🌌🍬🌅</div>
+        <div>
+          <div class="up-name">Original 5 New Maps</div>
+          <div class="up-desc">Volcano, Desert, Aurora, Candy Land, Golden Hour - unlock by catching apples!</div>
+        </div>
+      </div>
+      <div class="up-item">
+        <div class="up-icon">⛰️🏰👻🚢</div>
+        <div>
+          <div class="up-name">4 Brand New Maps</div>
+          <div class="up-desc">Mountains, Castle, Haunted House, Shipwreck - the final frontier at 450-600 apples!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="up-section">
+      <div class="up-sec-title">🎁 Map Rewards</div>
+      <div class="up-item">
+        <div class="up-icon">🍎⚡</div>
+        <div>
+          <div class="up-name">Exclusive Rewards</div>
+          <div class="up-desc">Unlock Space, Volcano, Desert, Aurora, Candy, or Golden Hour to get exclusive apple skins + power-ups! Auto-claimed when you reach each map.</div>
+        </div>
+      </div>
+      <div class="up-item">
+        <div class="up-icon">🌅</div>
+        <div>
+          <div class="up-name">Golden Hour Bonus</div>
+          <div class="up-desc">Golden Hour gives you TWO power-ups: Slow + Teleport!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="up-section">
+      <div class="up-sec-title">🔧 Changes</div>
+      <div class="up-item">
+        <div class="up-icon">💸</div>
+        <div>
+          <div class="up-name">Penalty Reduced</div>
+          <div class="up-desc">Drop penalty now only 30 coins instead of 100!</div>
+        </div>
+      </div>
+      <div class="up-item">
+        <div class="up-icon">✨</div>
+        <div>
+          <div class="up-name">Credits Updated</div>
+          <div class="up-desc">James added to Ideas section!</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="up-close">✕ Close</button>
+  </div>
+</div>
+
+<!-- ═══ MENU ═══ -->
+<div class="screen off" id="sMenu">
+  <div class="logo">🍎 Apple Catchers</div>
+    <button id="btnUpdate" style="position:absolute;top:max(env(safe-area-inset-top,0px),14px);right:14px;background:rgba(255,214,0,.15);border:1.5px solid rgba(255,214,0,.4);border-radius:12px;padding:6px 11px;color:#ffd600;font-family:'Fredoka One',cursive;font-size:.72rem;cursor:pointer;">🆕 New</button>
+  <div class="menu-coins"><div class="mc-coin"></div><span id="menuCoins">0</span></div>
+  <div id="menuProgress" style="color:rgba(255,255,255,.55);font-size:.8rem;font-weight:700;text-align:center;"></div>
+  <div class="mode-row">
+    <button class="mode-btn active" id="btnModeClassic">🍎<br>Classic</button>
+    <button class="mode-btn" id="btnModeTimer">⏱️<br>Timer</button>
+  </div>
+  <button class="big-btn btn-play" id="btnPlay">▶ Play</button>
+  <button class="big-btn btn-shop-menu" id="btnMenuShop">🛒 Shop</button>
+</div>
+
+<!-- Fullscreen tap-to-start — the ONLY reliable cross-browser audio trigger -->
+<div id="tapOverlay">
+  <div id="tapBox">
+    <div id="tapApple">🍎</div>
+    <div id="tapTitle">Apple Catchers</div>
+    <div id="tapBtn">▶ Tap to Play</div>
+    <div id="tapSub">🎵 Music starts automatically</div>
+  </div>
+</div>
+
+<!-- ═══ GAME OVER ═══ -->
+<div class="screen off" id="sGameOver">
+  <canvas id="goAppleCanvas" width="110" height="130"></canvas>
+  <div class="go-title">Apple Dropped!</div>
+  <div class="go-card">
+    Score: <b id="goScore">0</b><br>
+    Coins earned: <b id="goCoins">+0</b><br>
+    <span class="go-penalty" id="goPenalty"></span>
+  </div>
+  <button class="big-btn btn-retry" id="btnRetry">🔄 Play Again</button>
+  <button class="big-btn btn-menu2" id="btnGoMenu">🏠 Menu</button>
+</div>
+
+<!-- ═══ SHOP ═══ -->
+<div class="screen off" id="sShop">
+  <div class="shop-header">
+    <div class="shop-title">🛒 Shop</div>
+    <div class="shop-coins"><div class="sc-coin"></div><span id="shopCoins">0</span></div>
+    <button class="btn-back" id="btnBack">← Back</button>
+  </div>
+  <div class="shop-body">
+    <div class="sec-title">📦 CHESTS</div>
+    <div class="chest-grid" id="chestGrid"></div>
+    <div class="sec-title">🍎 APPLE SKINS</div>
+    <div class="skin-grid" id="appleSkinGrid"></div>
+    <div class="sec-title">🥣 BOWL SKINS</div>
+    <div class="skin-grid" id="bowlSkinGrid"></div>
+    <div class="sec-title">⚡ POWER-UPS</div>
+    <div class="pu-grid" id="puGrid"></div>
+    <div class="sec-title">🗺️ MAP REWARDS</div>
+    <div id="mapRewardsInfo" style="background:rgba(255,255,255,.06);border-radius:14px;padding:14px;margin-bottom:12px;">
+      <div style="color:rgba(255,255,255,.7);font-size:.78rem;margin-bottom:8px;">Unlock maps to get exclusive rewards!</div>
+      <div id="rewardsList"></div>
+    </div>
+    <div class="sec-title">🗺️ MAPS</div>
+    <div class="map-progress" id="mapProgress"></div>
+    <div class="skin-grid" id="mapGrid"></div>
+  </div>
+</div>
+
+<!-- ═══ TIMER END SCREEN ═══ -->
+<div class="screen off" id="sTimerEnd">
+  <div class="te-trophy">🏆</div>
+  <div class="te-title">Time's Up!</div>
+  <div class="te-card">
+    Caught: <b id="teCaught">0</b><br>
+    Dropped: <span class="neg" id="teDropped">0</span><br>
+    Final score: <b id="teScore">0</b><br>
+    Coins earned: <b id="teCoins">+0</b>
+  </div>
+  <button class="big-btn btn-green" id="btnTimerRetry">🔄 Play Again</button>
+  <button class="big-btn btn-grey" id="btnTimerMenu">🏠 Menu</button>
+</div>
+
+<!-- ═══ VICTORY SCREEN ═══ -->
+<div class="screen off" id="sVictory">
+  <div class="vc-trophy">🏆</div>
+  <div class="vc-title">You Beat It!</div>
+  <div class="vc-sub">You've caught 500 apples, collected all maps,<br>and mastered Apple Catchers!</div>
+  <div class="vc-card">
+    Total caught: <b id="vcCaught">0</b><br>
+    All maps: <b>✅ Unlocked</b><br>
+    Skins collected: <b id="vcSkins">0</b> / 16
+  </div>
+  <button class="big-btn btn-gold" id="btnVictoryCredits">🎬 See Credits</button>
+  <button class="big-btn btn-grey" id="btnVictoryMenu">🏠 Menu</button>
+</div>
+
+<!-- ═══ CREDITS SCREEN ═══ -->
+<div class="screen off" id="sCredits">
+  <div id="creditsScroll">
+    <div class="cr-spacer"></div>
+    <div class="cr-logo">🍎 Apple Catchers</div>
+    <div class="cr-tagline">A game about apples. And bowls.</div>
+
+    <div class="cr-divider">✦ ✦ ✦</div>
+
+    <div class="cr-role">Ideas</div>
+    <div class="cr-name">Evan John</div>
+    <div class="cr-name">James</div>
+    <div class="cr-name">DJ</div>
+    <div class="cr-name">Tinashe</div>
+
+    <div class="cr-divider">✦ ✦ ✦</div>
+
+    <div class="cr-role">Bug Fixes</div>
+    <div class="cr-name">Evan Bennett</div>
+
+    <div class="cr-divider">✦ ✦ ✦</div>
+
+    <div class="cr-role">Development</div>
+    <div class="cr-name">Evan Bennett</div>
+
+    <div class="cr-divider">✦ ✦ ✦</div>
+
+    <div class="cr-role">Special Thanks</div>
+    <div class="cr-name">Everyone who played 🍎</div>
+
+    <div class="cr-divider">· · ·</div>
+
+    <div class="cr-thanks">Thanks for playing!</div>
+    <div class="cr-heart">❤️</div>
+
+    <div class="cr-end-spacer"></div>
+  </div>
+  <button id="btnSkipCredits" style="position:fixed;bottom:max(env(safe-area-inset-bottom,0px),20px);left:50%;transform:translateX(-50%);background:rgba(255,255,255,.12);border:none;border-radius:20px;padding:10px 28px;color:rgba(255,255,255,.6);font-family:'Fredoka One',cursive;font-size:.9rem;cursor:pointer;z-index:10;">Skip ▶</button>
+</div>
+
+<!-- ═══ CHEST OPEN OVERLAY ═══ -->
+<div id="chestOpen">
+  <canvas id="chestOpenCanvas" width="140" height="140"></canvas>
+  <canvas id="chestRevealCanvas" width="140" height="140" style="display:none"></canvas>
+  <div class="chest-msg" id="chestMsg">Opening...</div>
+  <div class="chest-sub" id="chestSub"></div>
+  <button class="chest-close-btn" id="chestCloseBtn" style="display:none">Awesome! 🎉</button>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
