@@ -73,6 +73,12 @@ export const MAPS = [
   { id:'castle',    name:'Castle',     emoji:'🏰', req:500, desc:'Catch 500 apples total' },
   { id:'haunted',   name:'Haunted House',emoji:'👻', req:550, desc:'Catch 550 apples total' },
   { id:'shipwreck', name:'Shipwreck',  emoji:'🚢', req:600, desc:'Catch 600 apples total' },
+  { id:'graveyard', name:'Graveyard',  emoji:'⚰️', req:650, desc:'Catch 650 apples total' },
+  { id:'temple',    name:'Temple',     emoji:'🛕', req:700, desc:'Catch 700 apples total' },
+  { id:'futuristic',name:'Futuristic', emoji:'🤖', req:750, desc:'Catch 750 apples total' },
+  { id:'underground',name:'Underground',emoji:'⛏️', req:800, desc:'Catch 800 apples total' },
+  { id:'park',      name:'Park',       emoji:'🌳', req:850, desc:'Catch 850 apples total' },
+  { id:'dimension', name:'Dimension',  emoji:'🌀', req:900, desc:'Catch 900 apples total' },
 ];
 
 // Map rewards (auto-claimed when unlocking map)
