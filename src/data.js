@@ -13,6 +13,9 @@ export const APPLE_SKINS = [
   { id:'dune',    name:'Dune',    body:'#c8922a', dark:'#8d6e00', shine:'#fff9c4', leaf:'#795548', stem:'#4e342e', mapId:'desert' },
   { id:'aurora',  name:'Aurora',  body:'#00c853', dark:'#00701a', shine:'#b9f6ca', leaf:'#1b5e20', stem:'#212121', special:'glow', mapId:'aurora' },
   { id:'sugar',   name:'Sugar',   body:'#ff80ab', dark:'#f50057', shine:'#fce4ec', leaf:'#ad1457', stem:'#880e4f', mapId:'candy' },
+  { id:'smiley',  name:'Smiley',  body:'#ffd600', dark:'#f9a825', shine:'#fff9c4', leaf:'#43a047', stem:'#5d4037', special:'smiley' },
+  { id:'pixel',   name:'Pixel',   body:'#e53935', dark:'#b71c1c', shine:'#ff8a80', leaf:'#43a047', stem:'#5d4037', special:'pixel' },
+  { id:'dog',     name:'Dog',     body:'#8d6534', dark:'#6d4c2a', shine:'#d4a66a', leaf:'#43a047', stem:'#5d4037', special:'dog' },
 ];
 
 // Bowl skins

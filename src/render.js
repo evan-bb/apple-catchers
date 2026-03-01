@@ -123,6 +123,156 @@ export function drawApple(ctx, x, y, r, skinId, angle, t) {
     }
   }
 
+  // --- Smiley face ---
+  if (sk.special === 'smiley') {
+    // Big round eyes
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.arc(-r * 0.28, -r * 0.15, r * 0.16, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(r * 0.28, -r * 0.15, r * 0.16, 0, Math.PI * 2);
+    ctx.fill();
+    // Big eye shines
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(-r * 0.22, -r * 0.22, r * 0.07, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(r * 0.34, -r * 0.22, r * 0.07, 0, Math.PI * 2);
+    ctx.fill();
+    // Thick wide smile
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = Math.max(2.5, r * 0.12);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(0, r * 0.05, r * 0.4, 0.2, Math.PI - 0.2);
+    ctx.stroke();
+    // Bright rosy cheeks
+    ctx.fillStyle = 'rgba(255,80,80,0.45)';
+    ctx.beginPath();
+    ctx.arc(-r * 0.5, r * 0.18, r * 0.14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(r * 0.5, r * 0.18, r * 0.14, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // --- Pixel effect ---
+  if (sk.special === 'pixel') {
+    ctx.save();
+    // Clip to apple shape
+    ctx.beginPath();
+    ctx.ellipse(0, r * 0.06, r * 0.88, r * 0.84, 0, 0, Math.PI * 2);
+    ctx.clip();
+    // Big chunky pixel blocks
+    const pxSize = Math.max(5, r * 0.32);
+    const cols = ['#ff2222', '#aa0000', '#ff5555', '#dd1111', '#880000', '#ff7777', '#cc2222', '#ee3333'];
+    for (let py = -r * 1.2; py < r * 1.4; py += pxSize) {
+      for (let px = -r * 1.2; px < r * 1.2; px += pxSize) {
+        const ci = (Math.abs(Math.floor(px * 3.7 + py * 5.3)) % cols.length);
+        ctx.fillStyle = cols[ci];
+        ctx.fillRect(px, py, pxSize - 1, pxSize - 1);
+      }
+    }
+    // Bold black grid lines
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)';
+    ctx.lineWidth = 1;
+    for (let py = -r * 1.2; py < r * 1.4; py += pxSize) {
+      ctx.beginPath();
+      ctx.moveTo(-r * 1.2, py);
+      ctx.lineTo(r * 1.2, py);
+      ctx.stroke();
+    }
+    for (let px = -r * 1.2; px < r * 1.2; px += pxSize) {
+      ctx.beginPath();
+      ctx.moveTo(px, -r * 1.2);
+      ctx.lineTo(px, r * 1.4);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // --- Dog face ---
+  if (sk.special === 'dog') {
+    // Big floppy ears
+    ctx.fillStyle = '#5a3a1a';
+    // Left ear
+    ctx.beginPath();
+    ctx.ellipse(-r * 0.7, -r * 0.2, r * 0.3, r * 0.55, 0.35, 0, Math.PI * 2);
+    ctx.fill();
+    // Right ear
+    ctx.beginPath();
+    ctx.ellipse(r * 0.7, -r * 0.2, r * 0.3, r * 0.55, -0.35, 0, Math.PI * 2);
+    ctx.fill();
+    // Inner ear (pink)
+    ctx.fillStyle = '#c4886a';
+    ctx.beginPath();
+    ctx.ellipse(-r * 0.7, -r * 0.15, r * 0.18, r * 0.35, 0.35, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(r * 0.7, -r * 0.15, r * 0.18, r * 0.35, -0.35, 0, Math.PI * 2);
+    ctx.fill();
+    // Big snout
+    ctx.fillStyle = '#d4aa7a';
+    ctx.beginPath();
+    ctx.ellipse(0, r * 0.22, r * 0.4, r * 0.3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Big round eyes
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.arc(-r * 0.28, -r * 0.15, r * 0.15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(r * 0.28, -r * 0.15, r * 0.15, 0, Math.PI * 2);
+    ctx.fill();
+    // Big eye shines
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(-r * 0.22, -r * 0.22, r * 0.06, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(r * 0.34, -r * 0.22, r * 0.06, 0, Math.PI * 2);
+    ctx.fill();
+    // Big nose
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.ellipse(0, r * 0.1, r * 0.15, r * 0.11, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Nose shine
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.beginPath();
+    ctx.ellipse(-r * 0.05, r * 0.06, r * 0.06, r * 0.04, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+    // Mouth line
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = Math.max(1.5, r * 0.07);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(0, r * 0.21);
+    ctx.lineTo(0, r * 0.32);
+    ctx.stroke();
+    // Smile curves
+    ctx.beginPath();
+    ctx.arc(-r * 0.12, r * 0.38, r * 0.14, -0.4, Math.PI * 0.15);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(r * 0.12, r * 0.38, r * 0.14, Math.PI * 0.85, Math.PI + 0.4);
+    ctx.stroke();
+    // Big pink tongue
+    ctx.fillStyle = '#ff6088';
+    ctx.beginPath();
+    ctx.ellipse(r * 0.04, r * 0.48, r * 0.11, r * 0.14, 0.1, 0, Math.PI * 2);
+    ctx.fill();
+    // Tongue line
+    ctx.strokeStyle = '#e04870';
+    ctx.lineWidth = Math.max(1, r * 0.04);
+    ctx.beginPath();
+    ctx.moveTo(r * 0.04, r * 0.38);
+    ctx.lineTo(r * 0.04, r * 0.55);
+    ctx.stroke();
+  }
+
   ctx.restore();
 }
 
