@@ -368,6 +368,111 @@ export function drawBowl(ctx, cx, cy, w, h, skinId, t) {
     }
   }
 
+  // --- Smiley bowl ---
+  if (sk.special === 'smiley') {
+    // Eyes on the bowl body
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.arc(-hw * 0.3, hh * 0.25, hw * 0.1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(hw * 0.3, hh * 0.25, hw * 0.1, 0, Math.PI * 2);
+    ctx.fill();
+    // Eye shines
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(-hw * 0.26, hh * 0.18, hw * 0.04, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(hw * 0.34, hh * 0.18, hw * 0.04, 0, Math.PI * 2);
+    ctx.fill();
+    // Big smile
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = Math.max(2, hw * 0.06);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(0, hh * 0.3, hw * 0.3, 0.2, Math.PI - 0.2);
+    ctx.stroke();
+    // Rosy cheeks
+    ctx.fillStyle = 'rgba(255,80,80,0.4)';
+    ctx.beginPath();
+    ctx.arc(-hw * 0.5, hh * 0.4, hw * 0.08, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(hw * 0.5, hh * 0.4, hw * 0.08, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // --- Pixel bowl ---
+  if (sk.special === 'pixel') {
+    ctx.save();
+    // Clip to bowl body shape
+    ctx.beginPath();
+    ctx.moveTo(-hw, -hh * 0.25);
+    ctx.bezierCurveTo(-hw, hh * 1.1, hw, hh * 1.1, hw, -hh * 0.25);
+    ctx.closePath();
+    ctx.clip();
+    // Chunky pixel blocks
+    const pxSize = Math.max(4, hw * 0.2);
+    const cols = ['#ff2222', '#aa0000', '#ff5555', '#dd1111', '#880000', '#ff7777', '#cc2222', '#ee3333'];
+    for (let py = -hh; py < hh * 1.2; py += pxSize) {
+      for (let px = -hw; px < hw; px += pxSize) {
+        const ci = (Math.abs(Math.floor(px * 3.7 + py * 5.3)) % cols.length);
+        ctx.fillStyle = cols[ci];
+        ctx.fillRect(px, py, pxSize - 1, pxSize - 1);
+      }
+    }
+    // Grid lines
+    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+    ctx.lineWidth = 0.8;
+    for (let py = -hh; py < hh * 1.2; py += pxSize) {
+      ctx.beginPath();
+      ctx.moveTo(-hw, py);
+      ctx.lineTo(hw, py);
+      ctx.stroke();
+    }
+    for (let px = -hw; px < hw; px += pxSize) {
+      ctx.beginPath();
+      ctx.moveTo(px, -hh);
+      ctx.lineTo(px, hh * 1.2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // --- Dog bowl ---
+  if (sk.special === 'dog') {
+    // Paw prints on the bowl
+    const drawPaw = (px, py, s) => {
+      // Main pad
+      ctx.fillStyle = '#5a3a1a';
+      ctx.beginPath();
+      ctx.ellipse(px, py, s * 0.55, s * 0.45, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Toe beans
+      const toes = [[-0.4, -0.6], [0.4, -0.6], [-0.65, -0.15], [0.65, -0.15]];
+      for (const [tx, ty] of toes) {
+        ctx.beginPath();
+        ctx.arc(px + tx * s, py + ty * s, s * 0.22, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    };
+    drawPaw(-hw * 0.32, hh * 0.35, hw * 0.14);
+    drawPaw(hw * 0.32, hh * 0.35, hw * 0.14);
+    // Bone shape on rim
+    ctx.fillStyle = '#f5f0e0';
+    // Left knob
+    ctx.beginPath();
+    ctx.arc(-hw * 0.12, -hh * 0.25, hw * 0.06, 0, Math.PI * 2);
+    ctx.fill();
+    // Right knob
+    ctx.beginPath();
+    ctx.arc(hw * 0.12, -hh * 0.25, hw * 0.06, 0, Math.PI * 2);
+    ctx.fill();
+    // Bone middle
+    ctx.fillRect(-hw * 0.1, -hh * 0.3, hw * 0.2, hh * 0.1);
+  }
+
   ctx.restore();
 }
 

@@ -28,6 +28,9 @@ export const BOWL_SKINS = [
   { id:'lava',    name:'Lava',    rim:'#bf360c', body:'#e64a19', inside:'#ff8a65', dark:'#ff6d00', special:'glow' },
   { id:'galaxy',  name:'Galaxy',  rim:'#311b92', body:'#1a237e', inside:'#283593', dark:'#7c4dff', special:'stars' },
   { id:'rainbow', name:'Rainbow', rim:'#e91e63', body:null,      inside:'#fff8',   dark:'#fff' },
+  { id:'smiley',  name:'Smiley',  rim:'#f9a825', body:'#ffd600', inside:'#fff9c4', dark:'#f9a825', special:'smiley' },
+  { id:'pixel',   name:'Pixel',   rim:'#b71c1c', body:'#e53935', inside:'#ff8a80', dark:'#b71c1c', special:'pixel' },
+  { id:'dog',     name:'Dog',     rim:'#6d4c2a', body:'#8d6534', inside:'#d4aa7a', dark:'#5a3a1a', special:'dog' },
 ];
 
 // Chests — rewards are arrays of skin IDs that can drop
