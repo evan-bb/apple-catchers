@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { cloud } from './helpers.js';
+import { cloud, rrect } from './helpers.js';
 
 export function drawMap(mapId) {
   switch(mapId) {
@@ -627,22 +627,17 @@ function drawDesert() {
     const cy = H - 35 + Math.sin(cx * 0.01) * 8;
     // Main trunk
     ctx.fillStyle = '#2d6016';
-    ctx.beginPath();
-    ctx.roundRect(cx - 3, cy - 30, 6, 30, 3);
+    rrect(ctx, cx - 3, cy - 30, 6, 30, 3);
     ctx.fill();
     // Arms
-    ctx.beginPath();
-    ctx.roundRect(cx + 3, cy - 22, 10, 4, 2);
+    rrect(ctx, cx + 3, cy - 22, 10, 4, 2);
     ctx.fill();
-    ctx.beginPath();
-    ctx.roundRect(cx + 9, cy - 30, 4, 12, 2);
+    rrect(ctx, cx + 9, cy - 30, 4, 12, 2);
     ctx.fill();
     if (i % 2 === 0) {
-      ctx.beginPath();
-      ctx.roundRect(cx - 13, cy - 18, 10, 4, 2);
+      rrect(ctx, cx - 13, cy - 18, 10, 4, 2);
       ctx.fill();
-      ctx.beginPath();
-      ctx.roundRect(cx - 13, cy - 26, 4, 12, 2);
+      rrect(ctx, cx - 13, cy - 26, 4, 12, 2);
       ctx.fill();
     }
   }
@@ -991,8 +986,7 @@ function drawCastle() {
   ctx.fillStyle = '#1a0d1f';
 
   // Left tower
-  ctx.beginPath();
-  ctx.roundRect(W * 0.22, H * 0.42, W * 0.16, H * 0.58, [4, 4, 0, 0]);
+  rrect(ctx, W * 0.22, H * 0.42, W * 0.16, H * 0.58, 4);
   ctx.fill();
   // Left tower roof
   ctx.beginPath();
@@ -1002,8 +996,7 @@ function drawCastle() {
   ctx.fill();
 
   // Right tower
-  ctx.beginPath();
-  ctx.roundRect(W * 0.58, H * 0.38, W * 0.16, H * 0.62, [4, 4, 0, 0]);
+  rrect(ctx, W * 0.58, H * 0.38, W * 0.16, H * 0.62, 4);
   ctx.fill();
   // Right tower roof
   ctx.beginPath();
@@ -1119,12 +1112,10 @@ function drawHaunted() {
   // Haunted house (smoother)
   ctx.fillStyle = '#121218';
   // Main body
-  ctx.beginPath();
-  ctx.roundRect(W * 0.38, H * 0.52, W * 0.24, H * 0.38, [3, 3, 0, 0]);
+  rrect(ctx, W * 0.38, H * 0.52, W * 0.24, H * 0.38, 3);
   ctx.fill();
   // Upper floor
-  ctx.beginPath();
-  ctx.roundRect(W * 0.44, H * 0.46, W * 0.16, H * 0.12, [2, 2, 0, 0]);
+  rrect(ctx, W * 0.44, H * 0.46, W * 0.16, H * 0.12, 2);
   ctx.fill();
   // Roof
   ctx.beginPath();
@@ -1402,8 +1393,7 @@ function drawGraveyard() {
     const th = 18 + (i % 3) * 6;
     const tw = 10 + (i % 2) * 4;
     ctx.fillStyle = '#3a3a50';
-    ctx.beginPath();
-    ctx.roundRect(tx - tw / 2, H - 18 - th, tw, th, [3, 3, 0, 0]);
+    rrect(ctx, tx - tw / 2, H - 18 - th, tw, th, 3);
     ctx.fill();
     // Cross or RIP detail
     if (i % 2 === 0) {
@@ -1483,12 +1473,10 @@ function drawTemple() {
   // Temple structure
   ctx.fillStyle = '#8a7a60';
   // Base platform
-  ctx.beginPath();
-  ctx.roundRect(W * 0.25, H * 0.65, W * 0.5, H * 0.08, 2);
+  rrect(ctx, W * 0.25, H * 0.65, W * 0.5, H * 0.08, 2);
   ctx.fill();
   // Second level
-  ctx.beginPath();
-  ctx.roundRect(W * 0.3, H * 0.55, W * 0.4, H * 0.12, 2);
+  rrect(ctx, W * 0.3, H * 0.55, W * 0.4, H * 0.12, 2);
   ctx.fill();
   // Top pyramid
   ctx.fillStyle = '#7a6a50';
@@ -1502,8 +1490,7 @@ function drawTemple() {
   ctx.fillStyle = '#9a8a70';
   for (let i = 0; i < 4; i++) {
     const cx = W * (0.32 + i * 0.12);
-    ctx.beginPath();
-    ctx.roundRect(cx - 3, H * 0.57, 6, H * 0.15, 1);
+    rrect(ctx, cx - 3, H * 0.57, 6, H * 0.15, 1);
     ctx.fill();
   }
 

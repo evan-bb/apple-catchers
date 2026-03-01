@@ -163,7 +163,8 @@ function update(dt) {
 }
 
 export function draw() {
-  drawMap(state.save.equippedMap || 'meadow');
+  try { drawMap(state.save.equippedMap || 'meadow'); } catch(e) { console.error('Map draw error:', e); }
+  state.ctx.globalAlpha = 1;
 
   // Apples
   for (const a of state.apples) {
