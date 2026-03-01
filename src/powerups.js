@@ -48,8 +48,8 @@ export function usePower(slot) {
     showToast('🧲 Teleport active!');
     setTimeout(function() { delete state.activeEffects.teleport; }, pw.duration);
   } else if (pw.id === 'mapskip') {
-    // Only win if on Shipwreck (the final map)
-    if (state.save.equippedMap === 'shipwreck') {
+    // Only win if on Dimension (the final map)
+    if (state.save.equippedMap === 'dimension') {
       showToast('🗺️ Map Skip — You Win!');
       setTimeout(function() {
         state.save.victoryShown = true;
