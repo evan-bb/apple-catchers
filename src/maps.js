@@ -22,6 +22,8 @@ export function drawMap(mapId) {
     case 'underground':drawUnderground();break;
     case 'park':       drawPark();       break;
     case 'dimension':  drawDimension();  break;
+    case 'hell':       drawHell();       break;
+    case 'heaven':     drawHeaven();     break;
     default:           drawMeadow();     break;
   }
 }
@@ -2103,6 +2105,421 @@ function drawDimension() {
   ctx.moveTo(0, H);
   for (let x = 0; x <= W; x += 3) {
     ctx.lineTo(x, H - 10 + Math.sin(x * 0.02 + frame * 0.003 + 1) * 3);
+  }
+  ctx.lineTo(W, H);
+  ctx.fill();
+}
+
+// ═══════════════════════════════════════════════════
+// HELL
+// ═══════════════════════════════════════════════════
+function drawHell() {
+  const { ctx, W, H, frame } = state;
+
+  // Dark fiery sky gradient
+  const sky = ctx.createLinearGradient(0, 0, 0, H);
+  sky.addColorStop(0, '#0a0000');
+  sky.addColorStop(0.2, '#1a0000');
+  sky.addColorStop(0.5, '#3a0800');
+  sky.addColorStop(0.75, '#6b1500');
+  sky.addColorStop(1, '#8b2000');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W, H);
+
+  // Smoke/ash clouds drifting across the sky
+  for (let i = 0; i < 6; i++) {
+    const cx = (W * (0.05 + i * 0.18) + Math.sin(frame * 0.001 + i * 2) * 25) % (W + 80) - 40;
+    const cy = H * 0.06 + i * 12 + Math.sin(frame * 0.003 + i) * 5;
+    ctx.fillStyle = `rgba(40,10,0,${0.2 + i * 0.04})`;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 30 + i * 8, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Distant fire glow on horizon
+  const fireGlow = ctx.createRadialGradient(W * 0.5, H * 0.55, 0, W * 0.5, H * 0.55, W * 0.5);
+  fireGlow.addColorStop(0, 'rgba(255,80,0,0.12)');
+  fireGlow.addColorStop(0.5, 'rgba(200,40,0,0.06)');
+  fireGlow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = fireGlow;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── Dark red castle in background ──
+  const castleCol = '#2a0505';
+  const castleDark = '#1a0303';
+
+  // Left tower
+  ctx.fillStyle = castleCol;
+  ctx.fillRect(W * 0.18, H * 0.28, W * 0.1, H * 0.52);
+  // Left tower pointed roof
+  ctx.beginPath();
+  ctx.moveTo(W * 0.16, H * 0.28);
+  ctx.lineTo(W * 0.23, H * 0.15);
+  ctx.lineTo(W * 0.3, H * 0.28);
+  ctx.fill();
+
+  // Right tower
+  ctx.fillRect(W * 0.68, H * 0.24, W * 0.1, H * 0.56);
+  // Right tower pointed roof
+  ctx.beginPath();
+  ctx.moveTo(W * 0.66, H * 0.24);
+  ctx.lineTo(W * 0.73, H * 0.1);
+  ctx.lineTo(W * 0.8, H * 0.24);
+  ctx.fill();
+
+  // Center tower (tallest)
+  ctx.fillRect(W * 0.38, H * 0.22, W * 0.2, H * 0.58);
+  ctx.beginPath();
+  ctx.moveTo(W * 0.36, H * 0.22);
+  ctx.lineTo(W * 0.48, H * 0.08);
+  ctx.lineTo(W * 0.6, H * 0.22);
+  ctx.fill();
+
+  // Connecting walls
+  ctx.fillRect(W * 0.28, H * 0.45, W * 0.1, H * 0.35);
+  ctx.fillRect(W * 0.58, H * 0.45, W * 0.1, H * 0.35);
+
+  // Battlements on walls
+  for (let i = 0; i < 3; i++) {
+    ctx.fillRect(W * 0.29 + i * W * 0.03, H * 0.42, W * 0.018, W * 0.018);
+    ctx.fillRect(W * 0.59 + i * W * 0.03, H * 0.42, W * 0.018, W * 0.018);
+  }
+
+  // Castle windows (glowing red/orange)
+  const winPositions = [
+    [0.23, 0.36], [0.23, 0.48],
+    [0.73, 0.32], [0.73, 0.44],
+    [0.45, 0.30], [0.51, 0.30],
+    [0.45, 0.42], [0.51, 0.42],
+  ];
+  for (const [wx, wy] of winPositions) {
+    ctx.save();
+    ctx.shadowColor = '#ff3300';
+    ctx.shadowBlur = 8;
+    ctx.fillStyle = `rgba(255,${50 + Math.sin(frame * 0.03 + wx * 10) * 30},0,0.8)`;
+    ctx.beginPath();
+    ctx.arc(W * wx, H * wy, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Gate (dark arch)
+  ctx.fillStyle = castleDark;
+  ctx.beginPath();
+  ctx.arc(W * 0.48, H * 0.7, W * 0.04, Math.PI, 0);
+  ctx.lineTo(W * 0.52, H * 0.8);
+  ctx.lineTo(W * 0.44, H * 0.8);
+  ctx.fill();
+
+  // ── Demons flying in the sky ──
+  for (let i = 0; i < 4; i++) {
+    const dx = W * (0.1 + i * 0.25) + Math.sin(frame * 0.006 + i * 3) * 30;
+    const dy = H * (0.12 + i * 0.05) + Math.sin(frame * 0.01 + i * 2) * 15;
+    const wingFlap = Math.sin(frame * 0.06 + i * 4) * 0.4;
+    const dSize = 6 + i * 2;
+
+    ctx.save();
+    ctx.fillStyle = '#1a0000';
+    // Body
+    ctx.beginPath();
+    ctx.arc(dx, dy, dSize * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    // Left wing
+    ctx.beginPath();
+    ctx.moveTo(dx - dSize * 0.3, dy);
+    ctx.quadraticCurveTo(dx - dSize * 1.2, dy - dSize * (0.8 + wingFlap), dx - dSize * 0.6, dy + dSize * 0.2);
+    ctx.fill();
+    // Right wing
+    ctx.beginPath();
+    ctx.moveTo(dx + dSize * 0.3, dy);
+    ctx.quadraticCurveTo(dx + dSize * 1.2, dy - dSize * (0.8 + wingFlap), dx + dSize * 0.6, dy + dSize * 0.2);
+    ctx.fill();
+    // Glowing red eyes
+    ctx.shadowColor = '#ff0000';
+    ctx.shadowBlur = 4;
+    ctx.fillStyle = '#ff0000';
+    ctx.beginPath();
+    ctx.arc(dx - 1.5, dy - 1, 0.8, 0, Math.PI * 2);
+    ctx.arc(dx + 1.5, dy - 1, 0.8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // ── Flying embers / fire particles ──
+  for (let i = 0; i < 20; i++) {
+    const ex = (Math.sin(i * 167) * 0.5 + 0.5) * W;
+    const ey = H - 40 - ((frame * 0.4 + i * 47) % (H * 0.6));
+    const s = 1 + Math.sin(i * 3) * 0.8;
+    ctx.save();
+    ctx.shadowColor = '#ff4400';
+    ctx.shadowBlur = 5;
+    ctx.fillStyle = i % 3 === 0 ? '#ffaa00' : i % 3 === 1 ? '#ff6600' : '#ff3300';
+    ctx.globalAlpha = 0.4 + Math.sin(frame * 0.05 + i * 2) * 0.3;
+    ctx.beginPath();
+    ctx.arc(ex, ey, s, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.globalAlpha = 1;
+
+  // ── Lava river ground ──
+  // Rocky ground base
+  ctx.fillStyle = '#1a0505';
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  for (let x = 0; x <= W; x += 3) {
+    ctx.lineTo(x, H - 30 + Math.sin(x * 0.015) * 6 + Math.sin(x * 0.04) * 3);
+  }
+  ctx.lineTo(W, H);
+  ctx.fill();
+
+  // Lava streams in the ground
+  ctx.save();
+  ctx.shadowColor = '#ff4400';
+  ctx.shadowBlur = 12;
+  for (let i = 0; i < 3; i++) {
+    const lx = W * (0.15 + i * 0.3);
+    const lw = W * 0.12;
+    ctx.fillStyle = `rgba(255,${80 + Math.sin(frame * 0.02 + i) * 40},0,${0.6 + Math.sin(frame * 0.03 + i * 2) * 0.2})`;
+    ctx.beginPath();
+    ctx.moveTo(lx, H - 20);
+    for (let x = lx; x <= lx + lw; x += 2) {
+      ctx.lineTo(x, H - 18 + Math.sin(x * 0.05 + frame * 0.02) * 3);
+    }
+    ctx.lineTo(lx + lw, H);
+    ctx.lineTo(lx, H);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // Top crust layer
+  ctx.fillStyle = '#120303';
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  for (let x = 0; x <= W; x += 3) {
+    ctx.lineTo(x, H - 10 + Math.sin(x * 0.025 + 1) * 2);
+  }
+  ctx.lineTo(W, H);
+  ctx.fill();
+}
+
+// ═══════════════════════════════════════════════════
+// HEAVEN
+// ═══════════════════════════════════════════════════
+function drawHeaven() {
+  const { ctx, W, H, frame } = state;
+
+  // Bright golden-blue sky
+  const sky = ctx.createLinearGradient(0, 0, 0, H);
+  sky.addColorStop(0, '#4a90d9');
+  sky.addColorStop(0.15, '#6aabef');
+  sky.addColorStop(0.35, '#90c8ff');
+  sky.addColorStop(0.55, '#c8e4ff');
+  sky.addColorStop(0.7, '#e8f0ff');
+  sky.addColorStop(0.85, '#ffffff');
+  sky.addColorStop(1, '#f0f4ff');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W, H);
+
+  // Sunlight rays from top center
+  ctx.save();
+  for (let i = 0; i < 8; i++) {
+    const angle = -0.5 + i * 0.15;
+    const rayX = W * 0.5 + Math.tan(angle) * H * 0.5;
+    ctx.fillStyle = `rgba(255,240,180,${0.04 + Math.sin(frame * 0.01 + i) * 0.02})`;
+    ctx.beginPath();
+    ctx.moveTo(W * 0.48, -10);
+    ctx.lineTo(W * 0.52, -10);
+    ctx.lineTo(rayX + 30, H * 0.7);
+    ctx.lineTo(rayX - 30, H * 0.7);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // Bright sun glow at top
+  const sunGlow = ctx.createRadialGradient(W * 0.5, H * 0.02, 0, W * 0.5, H * 0.02, W * 0.35);
+  sunGlow.addColorStop(0, 'rgba(255,250,220,0.4)');
+  sunGlow.addColorStop(0.4, 'rgba(255,240,180,0.15)');
+  sunGlow.addColorStop(1, 'rgba(255,240,180,0)');
+  ctx.fillStyle = sunGlow;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── Golden palace in background ──
+  const palaceCol = '#e8d480';
+  const palaceLight = '#f0e0a0';
+  const palaceShade = '#c8b060';
+
+  // Main palace body
+  ctx.fillStyle = palaceCol;
+  ctx.fillRect(W * 0.28, H * 0.32, W * 0.44, H * 0.38);
+
+  // Left dome tower
+  ctx.fillStyle = palaceLight;
+  ctx.fillRect(W * 0.22, H * 0.35, W * 0.1, H * 0.35);
+  ctx.fillStyle = palaceCol;
+  ctx.beginPath();
+  ctx.arc(W * 0.27, H * 0.35, W * 0.05, Math.PI, 0);
+  ctx.fill();
+
+  // Right dome tower
+  ctx.fillStyle = palaceLight;
+  ctx.fillRect(W * 0.68, H * 0.35, W * 0.1, H * 0.35);
+  ctx.fillStyle = palaceCol;
+  ctx.beginPath();
+  ctx.arc(W * 0.73, H * 0.35, W * 0.05, Math.PI, 0);
+  ctx.fill();
+
+  // Center grand dome
+  ctx.fillStyle = palaceCol;
+  ctx.beginPath();
+  ctx.arc(W * 0.5, H * 0.32, W * 0.1, Math.PI, 0);
+  ctx.fill();
+  // Dome spire
+  ctx.fillStyle = '#f5e8a0';
+  ctx.fillRect(W * 0.495, H * 0.18, W * 0.01, H * 0.05);
+  // Spire star
+  ctx.save();
+  ctx.shadowColor = '#ffe066';
+  ctx.shadowBlur = 8;
+  ctx.fillStyle = '#fff4b0';
+  ctx.beginPath();
+  ctx.arc(W * 0.5, H * 0.17, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Palace columns
+  ctx.fillStyle = palaceShade;
+  for (let i = 0; i < 6; i++) {
+    const cx = W * (0.32 + i * 0.07);
+    ctx.fillRect(cx, H * 0.42, W * 0.015, H * 0.28);
+  }
+
+  // Palace arch windows (glowing)
+  for (let i = 0; i < 3; i++) {
+    const wx = W * (0.38 + i * 0.1);
+    ctx.save();
+    ctx.shadowColor = '#fff8d0';
+    ctx.shadowBlur = 6;
+    ctx.fillStyle = `rgba(255,250,220,${0.6 + Math.sin(frame * 0.02 + i * 3) * 0.2})`;
+    ctx.beginPath();
+    ctx.arc(wx, H * 0.48, W * 0.02, Math.PI, 0);
+    ctx.fillRect(wx - W * 0.02, H * 0.48, W * 0.04, H * 0.08);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Palace steps
+  ctx.fillStyle = palaceShade;
+  for (let i = 0; i < 3; i++) {
+    ctx.fillRect(W * (0.38 - i * 0.02), H * (0.68 + i * 0.02), W * (0.24 + i * 0.04), H * 0.02);
+  }
+
+  // ── Angels floating in the sky ──
+  for (let i = 0; i < 3; i++) {
+    const ax = W * (0.15 + i * 0.32) + Math.sin(frame * 0.005 + i * 4) * 20;
+    const ay = H * (0.1 + i * 0.06) + Math.sin(frame * 0.008 + i * 3) * 10;
+    const wingFlap = Math.sin(frame * 0.04 + i * 5) * 0.3;
+    const aSize = 7;
+
+    ctx.save();
+    // Halo
+    ctx.strokeStyle = 'rgba(255,230,100,0.6)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.ellipse(ax, ay - aSize * 1.1, aSize * 0.45, aSize * 0.15, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    // Body (white robe shape)
+    ctx.fillStyle = '#fff8f0';
+    ctx.beginPath();
+    ctx.moveTo(ax, ay - aSize * 0.3);
+    ctx.lineTo(ax - aSize * 0.4, ay + aSize * 0.8);
+    ctx.lineTo(ax + aSize * 0.4, ay + aSize * 0.8);
+    ctx.fill();
+    // Head
+    ctx.fillStyle = '#ffe8d0';
+    ctx.beginPath();
+    ctx.arc(ax, ay - aSize * 0.5, aSize * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    // Left wing
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.beginPath();
+    ctx.moveTo(ax - aSize * 0.2, ay);
+    ctx.quadraticCurveTo(ax - aSize * 1.4, ay - aSize * (0.9 + wingFlap), ax - aSize * 0.4, ay - aSize * 0.4);
+    ctx.fill();
+    // Right wing
+    ctx.beginPath();
+    ctx.moveTo(ax + aSize * 0.2, ay);
+    ctx.quadraticCurveTo(ax + aSize * 1.4, ay - aSize * (0.9 + wingFlap), ax + aSize * 0.4, ay - aSize * 0.4);
+    ctx.fill();
+    // Gentle glow around angel
+    const angelGlow = ctx.createRadialGradient(ax, ay, 0, ax, ay, aSize * 2);
+    angelGlow.addColorStop(0, 'rgba(255,250,220,0.1)');
+    angelGlow.addColorStop(1, 'rgba(255,250,220,0)');
+    ctx.fillStyle = angelGlow;
+    ctx.fillRect(ax - aSize * 2, ay - aSize * 2, aSize * 4, aSize * 4);
+    ctx.restore();
+  }
+
+  // ── Sparkles / light particles ──
+  for (let i = 0; i < 20; i++) {
+    const sx = (Math.sin(i * 197) * 0.5 + 0.5) * W;
+    const sy = (Math.sin(i * 131) * 0.5 + 0.5) * H * 0.65;
+    ctx.save();
+    ctx.globalAlpha = 0.3 + Math.sin(frame * 0.04 + i * 3) * 0.3;
+    ctx.fillStyle = '#fff8d0';
+    ctx.shadowColor = '#ffe066';
+    ctx.shadowBlur = 4;
+    ctx.beginPath();
+    ctx.arc(sx, sy, 1 + Math.sin(frame * 0.03 + i) * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.globalAlpha = 1;
+
+  // ── Cloud ground (you're above the clouds!) ──
+  // Back cloud layer
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  for (let x = 0; x <= W; x += 4) {
+    const y = H - 45 + Math.sin(x * 0.01 + frame * 0.001) * 10
+            + Math.sin(x * 0.025) * 6;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W, H);
+  ctx.fill();
+
+  // Middle cloud layer
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  for (let x = 0; x <= W; x += 4) {
+    const y = H - 30 + Math.sin(x * 0.012 + 1 + frame * 0.0015) * 8
+            + Math.sin(x * 0.03 + 2) * 4;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W, H);
+  ctx.fill();
+
+  // Fluffy cloud bumps on top
+  const bumpPositions = [0.08, 0.22, 0.35, 0.5, 0.65, 0.78, 0.92];
+  for (const bp of bumpPositions) {
+    const bx = W * bp + Math.sin(frame * 0.002 + bp * 10) * 5;
+    const by = H - 30 + Math.sin(bp * 20) * 5;
+    ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    ctx.beginPath();
+    ctx.arc(bx, by, 14 + Math.sin(bp * 7) * 4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Front cloud layer
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  for (let x = 0; x <= W; x += 3) {
+    const y = H - 16 + Math.sin(x * 0.015 + 2 + frame * 0.002) * 4
+            + Math.sin(x * 0.04 + 1) * 2;
+    ctx.lineTo(x, y);
   }
   ctx.lineTo(W, H);
   ctx.fill();

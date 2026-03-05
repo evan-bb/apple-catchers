@@ -85,6 +85,8 @@ export const MAPS = [
   { id:'underground',name:'Underground',emoji:'⛏️', req:800, desc:'Catch 800 apples total' },
   { id:'park',      name:'Park',       emoji:'🌳', req:850, desc:'Catch 850 apples total' },
   { id:'dimension', name:'Dimension',  emoji:'🌀', req:900, desc:'Catch 900 apples total' },
+  { id:'hell',      name:'Hell',       emoji:'😈', req:950, desc:'Catch 950 apples total' },
+  { id:'heaven',    name:'Heaven',     emoji:'😇', req:1000,desc:'Catch 1000 apples total' },
 ];
 
 // Map rewards (auto-claimed when unlocking map)
