@@ -273,6 +273,136 @@ export function drawApple(ctx, x, y, r, skinId, angle, t) {
     ctx.stroke();
   }
 
+  // --- Demon face (horns + fanged smiley) ---
+  if (sk.special === 'demon') {
+    // Horns
+    ctx.fillStyle = '#1a0000';
+    // Left horn
+    ctx.beginPath();
+    ctx.moveTo(-r * 0.45, -r * 0.7);
+    ctx.lineTo(-r * 0.7, -r * 1.3);
+    ctx.lineTo(-r * 0.15, -r * 0.65);
+    ctx.fill();
+    // Right horn
+    ctx.beginPath();
+    ctx.moveTo(r * 0.45, -r * 0.7);
+    ctx.lineTo(r * 0.7, -r * 1.3);
+    ctx.lineTo(r * 0.15, -r * 0.65);
+    ctx.fill();
+    // Horn highlights
+    ctx.fillStyle = '#3a0000';
+    ctx.beginPath();
+    ctx.moveTo(-r * 0.4, -r * 0.75);
+    ctx.lineTo(-r * 0.6, -r * 1.15);
+    ctx.lineTo(-r * 0.25, -r * 0.7);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(r * 0.4, -r * 0.75);
+    ctx.lineTo(r * 0.6, -r * 1.15);
+    ctx.lineTo(r * 0.25, -r * 0.7);
+    ctx.fill();
+    // Glowing eyes
+    ctx.save();
+    ctx.shadowColor = '#ff0000';
+    ctx.shadowBlur = 6;
+    ctx.fillStyle = '#ff2200';
+    ctx.beginPath();
+    ctx.arc(-r * 0.28, -r * 0.15, r * 0.14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(r * 0.28, -r * 0.15, r * 0.14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // Evil eye pupils (slitted)
+    ctx.fillStyle = '#000';
+    ctx.fillRect(-r * 0.3, -r * 0.25, r * 0.04, r * 0.2);
+    ctx.fillRect(r * 0.26, -r * 0.25, r * 0.04, r * 0.2);
+    // Wide evil smile
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = Math.max(2, r * 0.1);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(0, r * 0.05, r * 0.38, 0.15, Math.PI - 0.15);
+    ctx.stroke();
+    // Fangs
+    ctx.fillStyle = '#fff';
+    // Left fang
+    ctx.beginPath();
+    ctx.moveTo(-r * 0.25, r * 0.2);
+    ctx.lineTo(-r * 0.18, r * 0.42);
+    ctx.lineTo(-r * 0.11, r * 0.2);
+    ctx.fill();
+    // Right fang
+    ctx.beginPath();
+    ctx.moveTo(r * 0.11, r * 0.2);
+    ctx.lineTo(r * 0.18, r * 0.42);
+    ctx.lineTo(r * 0.25, r * 0.2);
+    ctx.fill();
+  }
+
+  // --- Angel face (wings + happy face + halo) ---
+  if (sk.special === 'angel') {
+    // Halo above the apple
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,215,0,0.7)';
+    ctx.lineWidth = Math.max(2, r * 0.1);
+    ctx.shadowColor = '#ffd700';
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    ctx.ellipse(0, -r * 0.95, r * 0.4, r * 0.12, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+    // Wings
+    ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    // Left wing
+    ctx.beginPath();
+    ctx.moveTo(-r * 0.7, 0);
+    ctx.quadraticCurveTo(-r * 1.5, -r * 0.6, -r * 0.85, -r * 0.5);
+    ctx.quadraticCurveTo(-r * 1.3, -r * 0.2, -r * 0.7, 0);
+    ctx.fill();
+    // Right wing
+    ctx.beginPath();
+    ctx.moveTo(r * 0.7, 0);
+    ctx.quadraticCurveTo(r * 1.5, -r * 0.6, r * 0.85, -r * 0.5);
+    ctx.quadraticCurveTo(r * 1.3, -r * 0.2, r * 0.7, 0);
+    ctx.fill();
+    // Wing feather details
+    ctx.strokeStyle = 'rgba(200,200,230,0.4)';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(-r * 0.8, -r * 0.1);
+    ctx.quadraticCurveTo(-r * 1.2, -r * 0.4, -r * 0.85, -r * 0.45);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(r * 0.8, -r * 0.1);
+    ctx.quadraticCurveTo(r * 1.2, -r * 0.4, r * 0.85, -r * 0.45);
+    ctx.stroke();
+    // Happy eyes (closed, happy arcs)
+    ctx.strokeStyle = '#444';
+    ctx.lineWidth = Math.max(1.5, r * 0.08);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(-r * 0.25, -r * 0.12, r * 0.1, Math.PI + 0.3, -0.3);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(r * 0.25, -r * 0.12, r * 0.1, Math.PI + 0.3, -0.3);
+    ctx.stroke();
+    // Gentle smile
+    ctx.strokeStyle = '#555';
+    ctx.lineWidth = Math.max(1.5, r * 0.08);
+    ctx.beginPath();
+    ctx.arc(0, r * 0.08, r * 0.28, 0.3, Math.PI - 0.3);
+    ctx.stroke();
+    // Rosy cheeks
+    ctx.fillStyle = 'rgba(255,180,200,0.4)';
+    ctx.beginPath();
+    ctx.arc(-r * 0.45, r * 0.15, r * 0.1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(r * 0.45, r * 0.15, r * 0.1, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
   ctx.restore();
 }
 
@@ -471,6 +601,134 @@ export function drawBowl(ctx, cx, cy, w, h, skinId, t) {
     ctx.fill();
     // Bone middle
     ctx.fillRect(-hw * 0.1, -hh * 0.3, hw * 0.2, hh * 0.1);
+  }
+
+  // --- Demon bowl (horns + fanged smiley) ---
+  if (sk.special === 'demon') {
+    // Horns on the rim
+    ctx.fillStyle = '#1a0000';
+    // Left horn
+    ctx.beginPath();
+    ctx.moveTo(-hw * 0.55, -hh * 0.3);
+    ctx.lineTo(-hw * 0.7, -hh * 0.9);
+    ctx.lineTo(-hw * 0.3, -hh * 0.25);
+    ctx.fill();
+    // Right horn
+    ctx.beginPath();
+    ctx.moveTo(hw * 0.55, -hh * 0.3);
+    ctx.lineTo(hw * 0.7, -hh * 0.9);
+    ctx.lineTo(hw * 0.3, -hh * 0.25);
+    ctx.fill();
+    // Horn highlights
+    ctx.fillStyle = '#3a0000';
+    ctx.beginPath();
+    ctx.moveTo(-hw * 0.5, -hh * 0.32);
+    ctx.lineTo(-hw * 0.6, -hh * 0.75);
+    ctx.lineTo(-hw * 0.35, -hh * 0.28);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(hw * 0.5, -hh * 0.32);
+    ctx.lineTo(hw * 0.6, -hh * 0.75);
+    ctx.lineTo(hw * 0.35, -hh * 0.28);
+    ctx.fill();
+    // Glowing red eyes
+    ctx.save();
+    ctx.shadowColor = '#ff0000';
+    ctx.shadowBlur = 5;
+    ctx.fillStyle = '#ff2200';
+    ctx.beginPath();
+    ctx.arc(-hw * 0.3, hh * 0.2, hw * 0.09, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(hw * 0.3, hh * 0.2, hw * 0.09, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // Slit pupils
+    ctx.fillStyle = '#000';
+    ctx.fillRect(-hw * 0.315, hh * 0.12, hw * 0.03, hh * 0.16);
+    ctx.fillRect(hw * 0.285, hh * 0.12, hw * 0.03, hh * 0.16);
+    // Evil smile
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = Math.max(1.5, hw * 0.05);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(0, hh * 0.3, hw * 0.3, 0.2, Math.PI - 0.2);
+    ctx.stroke();
+    // Fangs
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.moveTo(-hw * 0.2, hh * 0.38);
+    ctx.lineTo(-hw * 0.14, hh * 0.55);
+    ctx.lineTo(-hw * 0.08, hh * 0.38);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(hw * 0.08, hh * 0.38);
+    ctx.lineTo(hw * 0.14, hh * 0.55);
+    ctx.lineTo(hw * 0.2, hh * 0.38);
+    ctx.fill();
+  }
+
+  // --- Angel bowl (wings + happy face) ---
+  if (sk.special === 'angel') {
+    // Wings on the sides
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    // Left wing
+    ctx.beginPath();
+    ctx.moveTo(-hw * 0.9, hh * 0.1);
+    ctx.quadraticCurveTo(-hw * 1.6, -hh * 0.5, -hw * 0.95, -hh * 0.4);
+    ctx.quadraticCurveTo(-hw * 1.4, hh * 0.0, -hw * 0.9, hh * 0.1);
+    ctx.fill();
+    // Right wing
+    ctx.beginPath();
+    ctx.moveTo(hw * 0.9, hh * 0.1);
+    ctx.quadraticCurveTo(hw * 1.6, -hh * 0.5, hw * 0.95, -hh * 0.4);
+    ctx.quadraticCurveTo(hw * 1.4, hh * 0.0, hw * 0.9, hh * 0.1);
+    ctx.fill();
+    // Wing feather lines
+    ctx.strokeStyle = 'rgba(200,200,230,0.4)';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(-hw * 0.95, hh * 0.0);
+    ctx.quadraticCurveTo(-hw * 1.3, -hh * 0.3, -hw * 0.95, -hh * 0.35);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(hw * 0.95, hh * 0.0);
+    ctx.quadraticCurveTo(hw * 1.3, -hh * 0.3, hw * 0.95, -hh * 0.35);
+    ctx.stroke();
+    // Halo above the bowl
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,215,0,0.6)';
+    ctx.lineWidth = Math.max(1.5, hw * 0.06);
+    ctx.shadowColor = '#ffd700';
+    ctx.shadowBlur = 6;
+    ctx.beginPath();
+    ctx.ellipse(0, -hh * 0.55, hw * 0.4, hh * 0.1, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+    // Happy closed eyes
+    ctx.strokeStyle = '#555';
+    ctx.lineWidth = Math.max(1.2, hw * 0.05);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(-hw * 0.25, hh * 0.2, hw * 0.08, Math.PI + 0.3, -0.3);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(hw * 0.25, hh * 0.2, hw * 0.08, Math.PI + 0.3, -0.3);
+    ctx.stroke();
+    // Gentle smile
+    ctx.strokeStyle = '#555';
+    ctx.lineWidth = Math.max(1.2, hw * 0.05);
+    ctx.beginPath();
+    ctx.arc(0, hh * 0.3, hw * 0.22, 0.3, Math.PI - 0.3);
+    ctx.stroke();
+    // Rosy cheeks
+    ctx.fillStyle = 'rgba(255,180,200,0.35)';
+    ctx.beginPath();
+    ctx.arc(-hw * 0.42, hh * 0.35, hw * 0.07, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(hw * 0.42, hh * 0.35, hw * 0.07, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   ctx.restore();

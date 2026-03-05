@@ -16,6 +16,8 @@ export const APPLE_SKINS = [
   { id:'smiley',  name:'Smiley',  body:'#ffd600', dark:'#f9a825', shine:'#fff9c4', leaf:'#43a047', stem:'#5d4037', special:'smiley' },
   { id:'pixel',   name:'Pixel',   body:'#e53935', dark:'#b71c1c', shine:'#ff8a80', leaf:'#43a047', stem:'#5d4037', special:'pixel' },
   { id:'dog',     name:'Dog',     body:'#8d6534', dark:'#6d4c2a', shine:'#d4a66a', leaf:'#43a047', stem:'#5d4037', special:'dog' },
+  { id:'demon',   name:'Demon',   body:'#8b0000', dark:'#4a0000', shine:'#ff4444', leaf:'#2a0000', stem:'#1a0000', special:'demon' },
+  { id:'angel',   name:'Angel',   body:'#f0f0ff', dark:'#c8c8e8', shine:'#ffffff', leaf:'#d4af37', stem:'#c0a030', special:'angel' },
 ];
 
 // Bowl skins
@@ -31,6 +33,8 @@ export const BOWL_SKINS = [
   { id:'smiley',  name:'Smiley',  rim:'#f9a825', body:'#ffd600', inside:'#fff9c4', dark:'#f9a825', special:'smiley' },
   { id:'pixel',   name:'Pixel',   rim:'#b71c1c', body:'#e53935', inside:'#ff8a80', dark:'#b71c1c', special:'pixel' },
   { id:'dog',     name:'Dog',     rim:'#6d4c2a', body:'#8d6534', inside:'#d4aa7a', dark:'#5a3a1a', special:'dog' },
+  { id:'demon',   name:'Demon',   rim:'#4a0000', body:'#8b0000', inside:'#3a0000', dark:'#2a0000', special:'demon' },
+  { id:'angel',   name:'Angel',   rim:'#d0d0e8', body:'#f0f0ff', inside:'#ffffff', dark:'#b0b0d0', special:'angel' },
 ];
 
 // Chests — rewards are arrays of skin IDs that can drop
@@ -44,7 +48,7 @@ export const CHESTS = [
   { id:'mystery', name:'Mystery', cost:200, topCol:'#7c4dff', bodyCol:'#5c35c5', lockCol:'#e040fb',
     appleRewards:['pink','golden','galaxy','rainbow','diamond'], bowlRewards:['crystal','golden','galaxy','rainbow'] },
   { id:'crystal', name:'Crystal', cost:500, topCol:'#00bcd4', bodyCol:'#b2ebf2', lockCol:'#fff',
-    appleRewards:['diamond','galaxy','rainbow','lava'], bowlRewards:['crystal','galaxy','rainbow','lava'] },
+    appleRewards:['diamond','galaxy','rainbow','lava','demon','angel'], bowlRewards:['crystal','galaxy','rainbow','lava','demon','angel'] },
   { id:'mega',    name:'Mega',    cost:100, topCol:'#e65100', bodyCol:'#ff8f00', lockCol:'#ffd600',
     appleRewards:['golden','green','pink','diamond'], bowlRewards:['wood','silver','golden','crystal'] },
 ];

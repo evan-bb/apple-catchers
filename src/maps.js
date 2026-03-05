@@ -2216,7 +2216,7 @@ function drawHell() {
     const dx = W * (0.1 + i * 0.25) + Math.sin(frame * 0.006 + i * 3) * 30;
     const dy = H * (0.12 + i * 0.05) + Math.sin(frame * 0.01 + i * 2) * 15;
     const wingFlap = Math.sin(frame * 0.06 + i * 4) * 0.4;
-    const dSize = 6 + i * 2;
+    const dSize = 16 + i * 4;
 
     ctx.save();
     ctx.fillStyle = '#1a0000';
@@ -2234,13 +2234,24 @@ function drawHell() {
     ctx.moveTo(dx + dSize * 0.3, dy);
     ctx.quadraticCurveTo(dx + dSize * 1.2, dy - dSize * (0.8 + wingFlap), dx + dSize * 0.6, dy + dSize * 0.2);
     ctx.fill();
+    // Horns
+    ctx.beginPath();
+    ctx.moveTo(dx - dSize * 0.3, dy - dSize * 0.4);
+    ctx.lineTo(dx - dSize * 0.5, dy - dSize * 0.9);
+    ctx.lineTo(dx - dSize * 0.05, dy - dSize * 0.35);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(dx + dSize * 0.3, dy - dSize * 0.4);
+    ctx.lineTo(dx + dSize * 0.5, dy - dSize * 0.9);
+    ctx.lineTo(dx + dSize * 0.05, dy - dSize * 0.35);
+    ctx.fill();
     // Glowing red eyes
     ctx.shadowColor = '#ff0000';
-    ctx.shadowBlur = 4;
+    ctx.shadowBlur = 6;
     ctx.fillStyle = '#ff0000';
     ctx.beginPath();
-    ctx.arc(dx - 1.5, dy - 1, 0.8, 0, Math.PI * 2);
-    ctx.arc(dx + 1.5, dy - 1, 0.8, 0, Math.PI * 2);
+    ctx.arc(dx - dSize * 0.18, dy - dSize * 0.08, dSize * 0.1, 0, Math.PI * 2);
+    ctx.arc(dx + dSize * 0.18, dy - dSize * 0.08, dSize * 0.1, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
@@ -2419,12 +2430,12 @@ function drawHeaven() {
     const ax = W * (0.15 + i * 0.32) + Math.sin(frame * 0.005 + i * 4) * 20;
     const ay = H * (0.1 + i * 0.06) + Math.sin(frame * 0.008 + i * 3) * 10;
     const wingFlap = Math.sin(frame * 0.04 + i * 5) * 0.3;
-    const aSize = 7;
+    const aSize = 18;
 
     ctx.save();
     // Halo
     ctx.strokeStyle = 'rgba(255,230,100,0.6)';
-    ctx.lineWidth = 1.2;
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
     ctx.ellipse(ax, ay - aSize * 1.1, aSize * 0.45, aSize * 0.15, 0, 0, Math.PI * 2);
     ctx.stroke();
