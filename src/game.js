@@ -195,7 +195,7 @@ export function pauseGame() {
   state.gameRunning = false;
   state.paused = true;
   cancelAnimationFrame(state.animId);
-  haltMusic();
+  if (!state.musicMuted && state.AC) playTrack('pause');
   document.getElementById('pauseOverlay').classList.add('show');
 }
 

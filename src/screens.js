@@ -3,6 +3,7 @@ import { MAPS, MAP_REWARDS, APPLE_SKINS, POWERUPS } from './data.js';
 import { writeSave } from './save.js';
 import { addPower } from './powerups.js';
 import { drawApple } from './render.js';
+import { playTrack } from './audio.js';
 import { haltMusic, playTrack, sfxMiss } from './audio.js';
 import { renderShop } from './shop.js';
 import { saveScore } from './firebase.js';
@@ -211,4 +212,5 @@ export function openShop(from) {
   state.shopFrom = from;
   renderShop();
   showScreen('sShop');
+  if (!state.musicMuted && state.AC) playTrack('shop');
 }

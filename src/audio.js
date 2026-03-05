@@ -62,6 +62,62 @@ const G_BAS=[
 ];
 const GB = 0.13; // game beat duration
 
+// ── PAUSE THEME (chill, dreamy) ──────────────
+const P_MEL=[
+  _E4,0,_G4,0,_A4,0,_G4,0,
+  _E4,0,_D4,0,_C4,0,0,0,
+  _D4,0,_F4,0,_G4,0,_F4,0,
+  _E4,0,_D4,0,_E4,0,0,0,
+  _G4,0,_A4,0,_B4,0,_A4,0,
+  _G4,0,_E4,0,_D4,0,0,0,
+  _C4,0,_E4,0,_G4,0,_E4,0,
+  _C4,0,0,0,0,0,0,0,
+];
+const P_BAS=[
+  _C3,0,0,0,_A2,0,0,0,
+  _C3,0,0,0,_G2,0,0,0,
+  _F3,0,0,0,_D3,0,0,0,
+  _E3,0,0,0,_C3,0,0,0,
+  _G3,0,0,0,_E3,0,0,0,
+  _G3,0,0,0,_C3,0,0,0,
+  _A2,0,0,0,_G2,0,0,0,
+  _C3,0,0,0,0,0,0,0,
+];
+const PB = 0.22; // pause beat (slower, relaxed)
+
+// ── SHOP THEME (bouncy, fun) ─────────────────
+const S_MEL=[
+  _G4,0,_A4,_B4,0,_A4,_G4,0,
+  _E4,0,_D4,0,_E4,_G4,0,0,
+  _A4,0,_B4,_C5,0,_B4,_A4,0,
+  _G4,0,_E4,0,_D4,0,0,0,
+  _C5,0,_B4,_A4,0,_G4,_A4,0,
+  _B4,0,_G4,0,_E4,0,0,0,
+  _A4,0,_G4,_E4,0,_D4,_E4,0,
+  _C4,0,0,0,0,0,0,0,
+];
+const S_BAS=[
+  _C3,0,_E3,0,_G3,0,_E3,0,
+  _A2,0,_C3,0,_E3,0,_C3,0,
+  _F3,0,_A3,0,_C4,0,_A3,0,
+  _G3,0,_B3,0,_D4,0,_B3,0,
+  _C3,0,_E3,0,_G3,0,_E3,0,
+  _G2,0,_B3,0,_D4,0,_B3,0,
+  _A2,0,_C3,0,_E3,0,_C3,0,
+  _C3,0,_G3,0,_C3,0,0,0,
+];
+const S_ARP=[
+  _E5,_C5,_G4,_E5,_C5,_G4,_E5,_C5,
+  _C5,_A4,_E4,_C5,_A4,_E4,_C5,_A4,
+  _F5,_C5,_A4,_F5,_C5,_A4,_F5,_C5,
+  _D5,_B4,_G4,_D5,_B4,_G4,_D5,_B4,
+  _E5,_C5,_G4,_E5,_C5,_G4,_E5,_C5,
+  _D5,_B4,_G4,_D5,_B4,_G4,_D5,_B4,
+  _C5,_A4,_E4,_C5,_A4,_E4,_C5,_A4,
+  _G4,_E4,_C4,_G4,_E4,_C4,0,0,
+];
+const SB = 0.14; // shop beat (upbeat)
+
 // ── Low-level note player ─────────────────────
 function note(f, t, dur, type, vol) {
   if (!state.AC || !f) return;
@@ -130,6 +186,37 @@ function tickGame() {
   }
 }
 
+// ── Pause scheduler (chill, soft) ────────────
+function tickPause() {
+  if (!state.AC || state.trk !== 'pause') return;
+  while (state.nxt < state.AC.currentTime + 0.25) {
+    const i = state.bi % P_MEL.length;
+    if (P_MEL[i]) note(P_MEL[i], state.nxt, PB*2.5, 'sine',     0.12);
+    if (P_BAS[i]) note(P_BAS[i], state.nxt, PB*3,   'triangle', 0.09);
+    if (i % 4 === 0) {
+      const o=state.AC.createOscillator(),g=state.AC.createGain();
+      o.type='triangle'; o.frequency.value=2500+Math.random()*300;
+      g.gain.setValueAtTime(0.03,state.nxt); g.gain.exponentialRampToValueAtTime(0.0001,state.nxt+0.12);
+      o.connect(g);g.connect(state.MG);o.start(state.nxt);o.stop(state.nxt+0.13);
+    }
+    state.nxt += PB; state.bi++;
+  }
+}
+
+// ── Shop scheduler (bouncy, fun) ─────────────
+function tickShop() {
+  if (!state.AC || state.trk !== 'shop') return;
+  while (state.nxt < state.AC.currentTime + 0.22) {
+    const i = state.bi % S_MEL.length;
+    if (S_MEL[i]) note(S_MEL[i], state.nxt, SB*1.8, 'square',   0.14);
+    if (S_BAS[i]) note(S_BAS[i], state.nxt, SB*2.5, 'triangle', 0.16);
+    if (S_ARP[i]) note(S_ARP[i], state.nxt, SB*0.6, 'sine',     0.055);
+    if (i%4===0) kick(state.nxt, 120, 0.35);
+    if (i%4===2) noise(state.nxt, 0.06, 5000, 0.1);
+    state.nxt += SB; state.bi++;
+  }
+}
+
 // ── Public API ────────────────────────────────
 export function playTrack(name) {
   if (!state.AC || state.musicMuted) return;
@@ -137,8 +224,10 @@ export function playTrack(name) {
   clearInterval(state.ticker);
   state.trk = name; state.bi = 0;
   state.nxt = state.AC.currentTime + 0.05;
-  state.MG.gain.setTargetAtTime(name==='menu'?0.3:0.38, state.AC.currentTime, 0.2);
-  state.ticker = setInterval(name==='menu' ? tickMenu : tickGame, 55);
+  const vol = name==='pause' ? 0.25 : name==='menu' ? 0.3 : 0.38;
+  state.MG.gain.setTargetAtTime(vol, state.AC.currentTime, 0.2);
+  const fns = { menu:tickMenu, game:tickGame, pause:tickPause, shop:tickShop };
+  state.ticker = setInterval(fns[name] || tickMenu, 55);
 }
 export function haltMusic() {
   clearInterval(state.ticker); state.trk = ''; state.ticker = null;
@@ -175,6 +264,6 @@ export function toggleMute() {
     btn.textContent='🎵'; btn.classList.remove('muted');
     state.MG.gain.setTargetAtTime(0.38, state.AC.currentTime, 0.08);
     state.trk = ''; // force restart
-    playTrack(state.gameRunning ? 'game' : 'menu');
+    playTrack(state.paused ? 'pause' : state.gameRunning ? 'game' : 'menu');
   }
 }

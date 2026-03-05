@@ -97,6 +97,16 @@ document.getElementById('btnPauseShop').addEventListener('click', () => {
   showPauseButtons(true);
   openShop('game');
 });
+document.getElementById('btnPauseLb').addEventListener('click', () => {
+  document.getElementById('pauseOverlay').classList.remove('show');
+  showPauseButtons(true);
+  lbFrom = 'game';
+  lbMode = 'classic';
+  document.getElementById('lbTabClassic').classList.add('active');
+  document.getElementById('lbTabTimer').classList.remove('active');
+  showScreen('sLeaderboard');
+  loadLeaderboard('classic');
+});
 
 // ── Stats panel ────────────────────────────────
 document.getElementById('btnStats').addEventListener('click', () => {
@@ -133,6 +143,7 @@ function showPauseButtons(show) {
   document.getElementById('btnResume').style.display = d;
   document.getElementById('btnPauseShop').style.display = d;
   document.getElementById('btnStats').style.display = d;
+  document.getElementById('btnPauseLb').style.display = d;
   document.getElementById('btnPauseMenu').style.display = d;
 }
 
@@ -258,6 +269,7 @@ document.getElementById('btnLogOut').addEventListener('click', async () => {
 
 // ── Leaderboard screen ──────────────────────────
 let lbMode = 'classic';
+let lbFrom = 'menu';
 
 async function loadLeaderboard(mode) {
   const list = document.getElementById('lbList');
@@ -293,6 +305,7 @@ async function loadLeaderboard(mode) {
 }
 
 document.getElementById('btnLeaderboard').addEventListener('click', () => {
+  lbFrom = 'menu';
   lbMode = 'classic';
   document.getElementById('lbTabClassic').classList.add('active');
   document.getElementById('lbTabTimer').classList.remove('active');
@@ -317,5 +330,6 @@ document.getElementById('lbTabTimer').addEventListener('click', () => {
 });
 
 document.getElementById('btnLbBack').addEventListener('click', () => {
-  showScreen('sMenu');
+  if (lbFrom === 'game') { showScreen('sGame'); resumeGame(); }
+  else { showScreen('sMenu'); }
 });
