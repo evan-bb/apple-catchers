@@ -16,6 +16,7 @@ export const state = {
   frame: 0,
   animId: 0,
   gameRunning: false,
+  paused: false,
   lastTime: 0,
   speed: 0,
   nextDrop: 0,
@@ -56,5 +57,6 @@ export const state = {
     victoryShown:   false,
     powers:         {},
     claimedRewards: {},
+    difficulty: 'easy',
   },
 };

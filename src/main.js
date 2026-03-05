@@ -2,7 +2,7 @@ import './style.css';
 import { state } from './state.js';
 import { loadSave } from './save.js';
 import { updateAllCoins, showScreen, showCredits, openShop, updateHUD } from './screens.js';
-import { resize, startGame, draw, initGameListeners } from './game.js';
+import { resize, startGame, draw, initGameListeners, pauseGame, resumeGame } from './game.js';
 import { usePower } from './powerups.js';
 import { initAudio, playTrack, toggleMute } from './audio.js';
 import { onAuthChange, signUp, logIn, logOut, getLeaderboard, loadProgress } from './firebase.js';
@@ -74,13 +74,67 @@ document.getElementById('btnRetry').addEventListener('click', startGame);
 document.getElementById('btnGoMenu').addEventListener('click', () => {
   updateAllCoins(); showScreen('sMenu'); if (!state.musicMuted && state.AC) playTrack('menu');
 });
-document.getElementById('btnShop').addEventListener('click', () => {
-  state.gameRunning = false; cancelAnimationFrame(state.animId); openShop('game');
-});
+document.getElementById('btnPause').addEventListener('click', () => pauseGame());
 document.getElementById('btnBack').addEventListener('click', () => {
-  if (state.shopFrom === 'game') startGame();
+  if (state.shopFrom === 'game') { showScreen('sGame'); resumeGame(); }
   else { updateAllCoins(); showScreen('sMenu'); if (!state.musicMuted && state.AC) playTrack('menu'); }
 });
+
+// ── Pause menu buttons ─────────────────────────
+document.getElementById('btnResume').addEventListener('click', () => resumeGame());
+document.getElementById('btnPauseMenu').addEventListener('click', () => {
+  document.getElementById('pauseOverlay').classList.remove('show');
+  document.getElementById('statsPanel').style.display = 'none';
+  showPauseButtons(true);
+  state.paused = false; state.gameRunning = false;
+  cancelAnimationFrame(state.animId);
+  updateAllCoins(); showScreen('sMenu');
+  if (!state.musicMuted && state.AC) playTrack('menu');
+});
+document.getElementById('btnPauseShop').addEventListener('click', () => {
+  document.getElementById('pauseOverlay').classList.remove('show');
+  document.getElementById('statsPanel').style.display = 'none';
+  showPauseButtons(true);
+  openShop('game');
+});
+
+// ── Stats panel ────────────────────────────────
+document.getElementById('btnStats').addEventListener('click', () => {
+  showPauseButtons(false);
+  document.getElementById('statCoins').textContent = state.save.coins;
+  document.getElementById('statCaught').textContent = state.save.totalCaught || 0;
+  const isHard = state.save.difficulty === 'hard';
+  document.getElementById('btnEasy').classList.toggle('active', !isHard);
+  document.getElementById('btnHard').classList.toggle('active', isHard);
+  document.getElementById('diffDesc').textContent = isHard
+    ? 'Current: Hard — everything goes really fast!' : 'Current: Easy — normal speed';
+  document.getElementById('statsPanel').style.display = '';
+});
+document.getElementById('statsBack').addEventListener('click', () => {
+  document.getElementById('statsPanel').style.display = 'none';
+  showPauseButtons(true);
+});
+document.getElementById('btnEasy').addEventListener('click', () => {
+  state.save.difficulty = 'easy'; writeSave();
+  document.getElementById('btnEasy').classList.add('active');
+  document.getElementById('btnHard').classList.remove('active');
+  document.getElementById('diffDesc').textContent = 'Current: Easy — normal speed';
+});
+document.getElementById('btnHard').addEventListener('click', () => {
+  state.save.difficulty = 'hard'; writeSave();
+  document.getElementById('btnHard').classList.add('active');
+  document.getElementById('btnEasy').classList.remove('active');
+  document.getElementById('diffDesc').textContent = 'Current: Hard — everything goes really fast!';
+});
+
+function showPauseButtons(show) {
+  const d = show ? '' : 'none';
+  document.getElementById('pauseTitle').style.display = d;
+  document.getElementById('btnResume').style.display = d;
+  document.getElementById('btnPauseShop').style.display = d;
+  document.getElementById('btnStats').style.display = d;
+  document.getElementById('btnPauseMenu').style.display = d;
+}
 
 // ── Timer end screen ────────────────────────────
 document.getElementById('btnTimerRetry').addEventListener('click', startGame);

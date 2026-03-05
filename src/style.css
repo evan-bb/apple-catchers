@@ -15,7 +15,7 @@ html,body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:n
 .pill-coin{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe082,#ffd700,#e65100);border:2px solid rgba(255,255,255,.4);flex-shrink:0;}
 .pill span{color:#fff;font-family:'Fredoka One',cursive;font-size:1rem;text-shadow:0 1px 3px rgba(0,0,0,.5);}
 #hudScore{color:#fff;font-family:'Fredoka One',cursive;font-size:1rem;text-shadow:0 1px 4px rgba(0,0,0,.5);}
-#btnShop{background:linear-gradient(135deg,#ffca28,#ff8f00);border:none;border-radius:22px;padding:7px 15px;color:#5d2e00;font-family:'Fredoka One',cursive;font-size:.85rem;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.3);}
+#btnPause{background:linear-gradient(135deg,#ffca28,#ff8f00);border:none;border-radius:22px;padding:7px 15px;color:#5d2e00;font-family:'Fredoka One',cursive;font-size:.85rem;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.3);}
 #btnMusic{background:rgba(255,255,255,.22);border:none;border-radius:22px;padding:7px 12px;color:#fff;font-size:1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2);}
 #btnMusic.muted{opacity:.45;}
 .floaty{position:absolute;font-family:'Fredoka One',cursive;font-size:1.2rem;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.4);pointer-events:none;animation:floatUp .9s ease-out forwards;z-index:15;transform:translateX(-50%);}
@@ -224,3 +224,24 @@ html,body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:n
 .lb-loading{color:rgba(255,255,255,.5);font-weight:700;text-align:center;padding:40px 0;}
 .lb-empty{color:rgba(255,255,255,.5);font-weight:700;text-align:center;padding:40px 20px;}
 .btn-lb{background:linear-gradient(135deg,#ffa726,#ef6c00);color:#fff;}
+
+/* ═══ PAUSE OVERLAY ═══ */
+#pauseOverlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity .3s;}
+#pauseOverlay.show{opacity:1;pointer-events:all;}
+.pause-title{font-family:'Fredoka One',cursive;font-size:2.4rem;color:#fff;text-shadow:0 4px 16px rgba(0,0,0,.5);margin-bottom:10px;}
+.btn-stats{background:linear-gradient(135deg,#42a5f5,#1565c0);color:#fff;}
+.btn-grey{background:linear-gradient(135deg,#78909c,#455a64);color:#fff;}
+
+/* ═══ STATS PANEL ═══ */
+#statsPanel{width:min(340px,85vw);}
+.stats-back{color:rgba(255,255,255,.6);font-family:'Fredoka One',cursive;font-size:.9rem;cursor:pointer;margin-bottom:10px;}
+.stats-back:active{opacity:.6;}
+.stats-title{font-family:'Fredoka One',cursive;font-size:1.4rem;color:#fff;text-align:center;}
+.stats-card{background:rgba(255,255,255,.1);border-radius:18px;padding:16px 24px;margin-top:10px;}
+.stats-row{color:#fff;font-size:1rem;font-weight:800;line-height:2.2;}
+.stats-row b{color:#ffd600;font-family:'Fredoka One',cursive;font-size:1.2rem;}
+.diff-row{display:flex;gap:12px;margin-top:10px;justify-content:center;}
+.diff-btn{flex:1;max-width:140px;padding:12px 0;border:3px solid transparent;border-radius:16px;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;background:rgba(255,255,255,.12);color:#fff;transition:transform .1s,border-color .15s;}
+.diff-btn:active{transform:scale(.95);}
+.diff-btn.active{border-color:#ffd600;background:rgba(255,214,0,.2);}
+.diff-desc{color:rgba(255,255,255,.5);font-size:.8rem;font-weight:700;text-align:center;margin-top:8px;}

@@ -5,7 +5,7 @@ import { drawApple, drawBowl } from './render.js';
 import { drawMap } from './maps.js';
 import { applyTeleport, updatePowerBar } from './powerups.js';
 import { updateHUD, showToast, showScreen, checkMapUnlocks, checkVictory, endGame, endTimerGame, spawnFloaty } from './screens.js';
-import { sfxCatch, sfxMiss, sfxLevelUp, playTrack } from './audio.js';
+import { sfxCatch, sfxMiss, sfxLevelUp, playTrack, haltMusic } from './audio.js';
 
 export function resize() {
   state.W = state.cvs.offsetWidth;  state.H = state.cvs.offsetHeight;
@@ -33,7 +33,8 @@ function makeApple() {
 export function startGame() {
   resize();
   state.apples = []; state.score = 0; state.coinsEarned = 0; state.dropped = 0; state.grossCaught = 0;
-  state.speed = 2.4; state.level = 1;
+  const hardMult = state.save.difficulty === 'hard' ? 1.8 : 1;
+  state.speed = 2.4 * hardMult; state.level = 1;
   state.nextDrop = 100;
   state.timerMs = 120000; // 2 minutes in ms
   state.frame = 0; state.gameRunning = true;
@@ -98,7 +99,8 @@ function update(dt) {
     const newLvl = Math.floor(state.score / 6) + 1;
     if (newLvl !== state.level) {
       state.level = newLvl;
-      state.speed = Math.min(7.5, 2.4 + (state.level - 1) * 0.27);
+      const hm = state.save.difficulty === 'hard' ? 1.8 : 1;
+      state.speed = Math.min(7.5 * hm, (2.4 + (state.level - 1) * 0.27) * hm);
       sfxLevelUp();
       showToast('Level ' + state.level + '! 🔥');
     }
@@ -186,6 +188,27 @@ export function moveBowl(cx) {
   const rect = state.cvs.getBoundingClientRect();
   const x = (cx - rect.left) * (state.W / rect.width);
   state.bowlX = Math.max(state.BOWL_W / 2 + 12, Math.min(state.W - state.BOWL_W / 2 - 12, x));
+}
+
+export function pauseGame() {
+  if (!state.gameRunning) return;
+  state.gameRunning = false;
+  state.paused = true;
+  cancelAnimationFrame(state.animId);
+  haltMusic();
+  document.getElementById('pauseOverlay').classList.add('show');
+}
+
+export function resumeGame() {
+  if (!state.paused) return;
+  state.paused = false;
+  state.gameRunning = true;
+  state.lastTime = 0;
+  if (!state.musicMuted && state.AC) playTrack('game');
+  document.getElementById('pauseOverlay').classList.remove('show');
+  document.getElementById('statsPanel').style.display = 'none';
+  updatePowerBar();
+  state.animId = requestAnimationFrame(loop);
 }
 
 export function initGameListeners() {

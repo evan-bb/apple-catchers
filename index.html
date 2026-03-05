@@ -19,7 +19,7 @@
     <div class="pill"><div class="pill-coin"></div><span id="hudCoins">0</span></div>
     <span id="hudScore">Score: 0</span>
     <span id="hudTimer" style="display:none">2:00</span>
-    <button id="btnShop">🛒 Shop</button>
+    <button id="btnPause">⏸️</button>
     <button id="btnMusic">🎵</button>
   </div>
   <div id="timerBar" style="width:100%"></div>
@@ -256,6 +256,29 @@
   <div class="chest-msg" id="chestMsg">Opening...</div>
   <div class="chest-sub" id="chestSub"></div>
   <button class="chest-close-btn" id="chestCloseBtn" style="display:none">Awesome! 🎉</button>
+</div>
+
+<!-- ═══ PAUSE OVERLAY ═══ -->
+<div id="pauseOverlay">
+  <div class="pause-title" id="pauseTitle">⏸️ Paused</div>
+  <button class="big-btn btn-play" id="btnResume">🔍 Re-zoom</button>
+  <button class="big-btn btn-shop-menu" id="btnPauseShop">🛒 Shop</button>
+  <button class="big-btn btn-stats" id="btnStats">📊 Stats</button>
+  <button class="big-btn btn-grey" id="btnPauseMenu">🏠 Menu</button>
+  <div id="statsPanel" style="display:none">
+    <div class="stats-back" id="statsBack">← Back</div>
+    <div class="stats-title">📊 Stats</div>
+    <div class="stats-card">
+      <div class="stats-row">🪙 Coins: <b id="statCoins">0</b></div>
+      <div class="stats-row">🍎 Apples Caught: <b id="statCaught">0</b></div>
+    </div>
+    <div class="stats-title" style="margin-top:16px;">Difficulty</div>
+    <div class="diff-row">
+      <button class="diff-btn active" id="btnEasy">😊 Easy</button>
+      <button class="diff-btn" id="btnHard">🔥 Hard</button>
+    </div>
+    <div class="diff-desc" id="diffDesc">Current: Easy — normal speed</div>
+  </div>
 </div>
 
 <script type="module" src="/src/main.js"></script>
