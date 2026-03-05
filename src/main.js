@@ -76,7 +76,12 @@ document.getElementById('btnGoMenu').addEventListener('click', () => {
 });
 document.getElementById('btnPause').addEventListener('click', () => pauseGame());
 document.getElementById('btnBack').addEventListener('click', () => {
-  if (state.shopFrom === 'game') { showScreen('sGame'); resumeGame(); }
+  if (state.shopFrom === 'game') {
+    showScreen('sGame');
+    // Go back to pause menu (not auto-resume)
+    if (!state.musicMuted && state.AC) playTrack('pause');
+    document.getElementById('pauseOverlay').classList.add('show');
+  }
   else { updateAllCoins(); showScreen('sMenu'); if (!state.musicMuted && state.AC) playTrack('menu'); }
 });
 
@@ -330,6 +335,10 @@ document.getElementById('lbTabTimer').addEventListener('click', () => {
 });
 
 document.getElementById('btnLbBack').addEventListener('click', () => {
-  if (lbFrom === 'game') { showScreen('sGame'); resumeGame(); }
+  if (lbFrom === 'game') {
+    showScreen('sGame');
+    if (!state.musicMuted && state.AC) playTrack('pause');
+    document.getElementById('pauseOverlay').classList.add('show');
+  }
   else { showScreen('sMenu'); }
 });

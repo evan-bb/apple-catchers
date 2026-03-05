@@ -204,6 +204,8 @@ export function resumeGame() {
   state.paused = false;
   state.gameRunning = true;
   state.lastTime = 0;
+  state.apples = [];          // clear apples so you get a fresh start
+  state.nextDrop = 60;        // short delay before new apples fall
   if (!state.musicMuted && state.AC) playTrack('game');
   document.getElementById('pauseOverlay').classList.remove('show');
   document.getElementById('statsPanel').style.display = 'none';
