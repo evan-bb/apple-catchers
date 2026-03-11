@@ -520,7 +520,7 @@ export function renderMerchantGrid() {
         });
         card.appendChild(btn);
       }
-    } else {
+    } else if (item.type === 'power') {
       // Power-up item
       var icon = el('div', 'merchant-pw-icon');
       icon.textContent = item.power.emoji;
@@ -552,6 +552,40 @@ export function renderMerchantGrid() {
         sfxLevelUp();
       });
       card.appendChild(btn2);
+    } else if (item.type === 'shard') {
+      // Shard item
+      var shIcon = el('div', 'merchant-pw-icon');
+      shIcon.textContent = item.shard.emoji;
+      card.appendChild(shIcon);
+
+      var shNm = el('div', 'merchant-name');
+      shNm.textContent = item.shard.name;
+      shNm.style.color = item.shard.color;
+      card.appendChild(shNm);
+
+      var shDesc = el('div', 'merchant-desc');
+      shDesc.textContent = 'Collect 10 to redeem!';
+      card.appendChild(shDesc);
+
+      var shCost = el('div', 'merchant-cost');
+      shCost.textContent = item.price + ' 🪙';
+      card.appendChild(shCost);
+
+      var shBtn = el('button', 'merchant-buy-btn');
+      shBtn.textContent = 'Buy';
+      shBtn.disabled = state.save.coins < item.price;
+      shBtn.addEventListener('click', function() {
+        if (state.save.coins < item.price) { showToast('Not enough coins!'); return; }
+        state.save.coins -= item.price;
+        if (!state.save.shards) state.save.shards = { bronze:0, silver:0, gold:0 };
+        state.save.shards[item.shard.id]++;
+        writeSave();
+        updateAllCoins();
+        renderShop();
+        showToast('🍀 Bought ' + item.shard.emoji + ' ' + item.shard.name + '!');
+        sfxLevelUp();
+      });
+      card.appendChild(shBtn);
     }
 
     grid.appendChild(card);
@@ -563,12 +597,23 @@ function generateMerchantItems() {
   var usedIds = [];
 
   for (var i = 0; i < 3; i++) {
-    // 60% chance skin, 40% chance power-up
-    if (Math.random() < 0.6) {
-      // Random skin (apple or bowl)
+    var roll = Math.random();
+    // 10% chance for a shard (rare!)
+    if (roll < 0.10 && usedIds.indexOf('shard') === -1) {
+      // Pick a random shard type (gold rarest, bronze most common)
+      var shardRoll = Math.random();
+      var shard;
+      if (shardRoll < 0.15)      shard = SHARDS[2]; // gold (15% of the 10%)
+      else if (shardRoll < 0.45) shard = SHARDS[1]; // silver (30% of the 10%)
+      else                       shard = SHARDS[0]; // bronze (55% of the 10%)
+      var shardPrice = shard.id === 'gold' ? 500 : shard.id === 'silver' ? 300 : 150;
+      usedIds.push('shard');
+      items.push({ type:'shard', shard:shard, price:shardPrice });
+    }
+    // 55% chance skin
+    else if (roll < 0.65) {
       var isApple = Math.random() < 0.5;
       var skinList = isApple ? APPLE_SKINS : BOWL_SKINS;
-      // Filter out shard-exclusive (dark) and already-used
       var pool = skinList.filter(function(s) {
         return s.id !== 'classic' && s.id !== 'dark' && usedIds.indexOf(s.id + (isApple ? 'a' : 'b')) === -1;
       });
@@ -579,7 +624,7 @@ function generateMerchantItems() {
       usedIds.push(skin.id + (isApple ? 'a' : 'b'));
       items.push({ type:'skin', skin:skin, skinType: isApple ? 'apple' : 'bowl', price:price });
     } else {
-      // Random power-up
+      // 35% chance power-up
       var pwPool = POWERUPS.filter(function(p) { return usedIds.indexOf('pw_' + p.id) === -1; });
       if (pwPool.length === 0) continue;
       var pw = pwPool[Math.floor(Math.random() * pwPool.length)];
