@@ -447,18 +447,94 @@ function redeemShard(shardId) {
   var alreadyHave = ownedArr.includes(skin.id);
   if (!alreadyHave) { ownedArr.push(skin.id); }
   writeSave();
-  updateAllCoins();
-  renderShop();
 
   if (alreadyHave) {
-    showToast('Already have ' + skin.name + '! Shards refunded.');
     state.save.shards[shardId] += sh.cost;
     writeSave();
     renderShop();
+    showToast('Already have ' + skin.name + '! Shards refunded.');
   } else {
-    showToast('✨ Unlocked ' + skin.name + ' ' + (giveApple ? 'Apple' : 'Bowl') + '!');
-    sfxLevelUp();
+    // Show the reveal animation!
+    openShardAnim(sh, skin, giveApple);
   }
+}
+
+function openShardAnim(shard, skin, isApple) {
+  var overlay  = document.getElementById('chestOpen');
+  var chestC   = document.getElementById('chestOpenCanvas');
+  var revealC  = document.getElementById('chestRevealCanvas');
+  var msgEl    = document.getElementById('chestMsg');
+  var subEl    = document.getElementById('chestSub');
+  var closeBtn = document.getElementById('chestCloseBtn');
+
+  // Reset
+  chestC.style.display  = 'block';
+  revealC.style.display = 'none';
+  closeBtn.style.display = 'none';
+  msgEl.textContent = '✨ Redeeming...';
+  subEl.textContent = shard.emoji + ' ' + shard.name + ' x10';
+  overlay.classList.add('show');
+
+  // Sparkle animation on the chest canvas
+  clearInterval(state.chestInterval);
+  var t = 0;
+  state.chestInterval = setInterval(function() {
+    var c = chestC.getContext('2d');
+    c.clearRect(0, 0, 140, 140);
+
+    // Glowing circle in the middle
+    var glow = 0.3 + Math.sin(t * 0.15) * 0.2;
+    c.save();
+    c.globalAlpha = glow;
+    c.fillStyle = shard.color;
+    c.beginPath();
+    c.arc(70, 70, 35 + Math.sin(t * 0.1) * 5, 0, Math.PI * 2);
+    c.fill();
+    c.restore();
+
+    // Big shard emoji
+    c.font = '48px serif';
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.fillText(shard.emoji, 70, 70);
+
+    // Sparkles flying outward
+    for (var i = 0; i < 8; i++) {
+      var angle = (i / 8) * Math.PI * 2 + t * 0.05;
+      var dist = 20 + (t % 30) * 1.2;
+      var sx = 70 + Math.cos(angle) * dist;
+      var sy = 70 + Math.sin(angle) * dist;
+      var sparkAlpha = Math.max(0, 1 - (t % 30) / 30);
+      c.save();
+      c.globalAlpha = sparkAlpha * 0.7;
+      c.fillStyle = shard.color;
+      c.beginPath();
+      c.arc(sx, sy, 3, 0, Math.PI * 2);
+      c.fill();
+      c.restore();
+    }
+
+    t++;
+  }, 30);
+
+  // After animation, reveal the skin
+  setTimeout(function() {
+    clearInterval(state.chestInterval);
+    chestC.style.display  = 'none';
+    revealC.style.display = 'block';
+    revealC.width = 140; revealC.height = 140;
+    var rc = revealC.getContext('2d');
+    rc.clearRect(0, 0, 140, 140);
+    if (isApple) drawApple(rc, 70, 80, 50, skin.id, 0, 0);
+    else         drawBowl(rc, 70, 84, 126, 46, skin.id, 0);
+
+    msgEl.textContent = '🎉 ' + skin.name + '!';
+    subEl.textContent = (isApple ? 'Apple' : 'Bowl') + ' skin unlocked!';
+    closeBtn.style.display = 'block';
+    sfxLevelUp();
+    updateAllCoins();
+    renderShop();
+  }, 1500);
 }
 
 // ── Merchant Grid ───────────────────────────────
