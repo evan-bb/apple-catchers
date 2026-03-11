@@ -19,7 +19,12 @@ export const APPLE_SKINS = [
   { id:'demon',   name:'Demon',   body:'#8b0000', dark:'#4a0000', shine:'#ff4444', leaf:'#2a0000', stem:'#1a0000', special:'demon' },
   { id:'angel',   name:'Angel',   body:'#f0f0ff', dark:'#c8c8e8', shine:'#ffffff', leaf:'#d4af37', stem:'#c0a030', special:'angel' },
   { id:'leprechaun', name:'Leprechaun', body:'#43a047', dark:'#2e7d32', shine:'#a5d6a7', leaf:'#1b5e20', stem:'#33691e', special:'leprechaun', event:true },
-  { id:'dark',    name:'Dark',    body:'#1a1a2e', dark:'#0d0d1a', shine:'#4a0072', leaf:'#1a0033', stem:'#0d001a', special:'dark' },
+  { id:'neon',    name:'Neon',    body:'#00e676', dark:'#00c853', shine:'#b9f6ca', leaf:'#76ff03', stem:'#64dd17', special:'neon', shardOnly:true },
+  { id:'ice',     name:'Ice',     body:'#b3e5fc', dark:'#81d4fa', shine:'#e1f5fe', leaf:'#4fc3f7', stem:'#90caf9', special:'ice', shardOnly:true },
+  { id:'ghost',   name:'Ghost',   body:'#e0e0e0', dark:'#bdbdbd', shine:'#ffffff', leaf:'#9e9e9e', stem:'#757575', special:'ghost', shardOnly:true },
+  { id:'crown',   name:'Crown',   body:'#ffd600', dark:'#f9a825', shine:'#fff9c4', leaf:'#ff8f00', stem:'#6d4c41', special:'crown', shardOnly:true },
+  { id:'void',    name:'Void',    body:'#1a0033', dark:'#0d001a', shine:'#7c4dff', leaf:'#4a148c', stem:'#311b92', special:'void', shardOnly:true },
+  { id:'dark',    name:'Dark',    body:'#1a1a2e', dark:'#0d0d1a', shine:'#4a0072', leaf:'#1a0033', stem:'#0d001a', special:'dark', shardOnly:true },
 ];
 
 // Bowl skins
@@ -38,7 +43,12 @@ export const BOWL_SKINS = [
   { id:'demon',   name:'Demon',   rim:'#4a0000', body:'#8b0000', inside:'#3a0000', dark:'#2a0000', special:'demon' },
   { id:'angel',   name:'Angel',   rim:'#d0d0e8', body:'#f0f0ff', inside:'#ffffff', dark:'#b0b0d0', special:'angel' },
   { id:'leprechaun', name:'Leprechaun', rim:'#2e7d32', body:'#43a047', inside:'#a5d6a7', dark:'#1b5e20', special:'leprechaun', event:true },
-  { id:'dark',    name:'Dark',    rim:'#1a1a2e', body:'#0d0d1a', inside:'#1a0033', dark:'#0a0a15', special:'dark' },
+  { id:'neon',    name:'Neon',    rim:'#00e676', body:'#00c853', inside:'#b9f6ca', dark:'#00e676', special:'neon', shardOnly:true },
+  { id:'ice',     name:'Ice',     rim:'#81d4fa', body:'#b3e5fc', inside:'#e1f5fe', dark:'#4fc3f7', special:'ice', shardOnly:true },
+  { id:'ghost',   name:'Ghost',   rim:'#bdbdbd', body:'#e0e0e0', inside:'#fafafa', dark:'#9e9e9e', special:'ghost', shardOnly:true },
+  { id:'crown',   name:'Crown',   rim:'#f9a825', body:'#ffd600', inside:'#fff9c4', dark:'#ff8f00', special:'crown', shardOnly:true },
+  { id:'void',    name:'Void',    rim:'#1a0033', body:'#0d001a', inside:'#311b92', dark:'#4a148c', special:'void', shardOnly:true },
+  { id:'dark',    name:'Dark',    rim:'#1a1a2e', body:'#0d0d1a', inside:'#1a0033', dark:'#0a0a15', special:'dark', shardOnly:true },
 ];
 
 // Chests — rewards are arrays of skin IDs that can drop
@@ -108,7 +118,9 @@ export const RARITY = {
   rainbow:'epic', diamond:'epic', dog:'epic',
   comet:'exotic', solar:'exotic', dune:'exotic', aurora:'exotic', sugar:'exotic',
   demon:'exotic', angel:'exotic',
-  dark:'mythical',
+  neon:'rare', ice:'rare',
+  ghost:'epic', crown:'epic',
+  void:'mythical', dark:'mythical',
   // Bowl-only skins
   silver:'uncommon', wood:'rare', crystal:'rare',
 };
@@ -123,11 +135,11 @@ export const RARITY_ORDER = ['common','uncommon','rare','epic','exotic','mythica
 // Shards — collect 10 of a type to redeem for exclusive items
 export const SHARDS = [
   { id:'bronze', name:'Bronze Shard', emoji:'🟫', color:'#cd7f32', cost:10,
-    rewards: ['pixel','wood'] },
+    rewards: ['neon','ice'] },
   { id:'silver', name:'Silver Shard', emoji:'⬜', color:'#c0c0c0', cost:10,
-    rewards: ['diamond','crystal'] },
+    rewards: ['ghost','crown'] },
   { id:'gold',   name:'Gold Shard',   emoji:'🟡', color:'#ffd700', cost:10,
-    rewards: ['dark'] },
+    rewards: ['void','dark'] },
 ];
 
 // Merchant — prices for direct-buy items

@@ -691,7 +691,7 @@ function generateMerchantItems() {
       var isApple = Math.random() < 0.5;
       var skinList = isApple ? APPLE_SKINS : BOWL_SKINS;
       var pool = skinList.filter(function(s) {
-        return s.id !== 'classic' && s.id !== 'dark' && usedIds.indexOf(s.id + (isApple ? 'a' : 'b')) === -1;
+        return s.id !== 'classic' && !s.shardOnly && usedIds.indexOf(s.id + (isApple ? 'a' : 'b')) === -1;
       });
       if (pool.length === 0) continue;
       var skin = pool[Math.floor(Math.random() * pool.length)];

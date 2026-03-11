@@ -462,6 +462,170 @@ export function drawApple(ctx, x, y, r, skinId, angle, t) {
     }
   }
 
+  // --- Neon (glowing bright outline + pulsing glow) ---
+  if (sk.special === 'neon') {
+    ctx.save();
+    ctx.globalAlpha = 0.5 + Math.sin(t * 0.06) * 0.3;
+    ctx.shadowColor = '#00ff88';
+    ctx.shadowBlur = 18;
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.82, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+    // Neon flicker dots
+    for (let i = 0; i < 6; i++) {
+      const a = t * 0.03 + i * Math.PI / 3;
+      const d = r * 0.7 + Math.sin(t * 0.08 + i) * r * 0.15;
+      ctx.fillStyle = 'rgba(0,255,136,' + (0.5 + Math.sin(t * 0.1 + i * 2) * 0.4) + ')';
+      ctx.beginPath();
+      ctx.arc(Math.cos(a) * d, Math.sin(a) * d, r * 0.05, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // --- Ice (frost crystals + icicles) ---
+  if (sk.special === 'ice') {
+    // Frost shimmer
+    ctx.save();
+    ctx.globalAlpha = 0.2 + Math.sin(t * 0.04) * 0.1;
+    ctx.fillStyle = '#e1f5fe';
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.85, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // Icicles hanging from bottom
+    ctx.fillStyle = 'rgba(129,212,250,0.7)';
+    for (let i = 0; i < 3; i++) {
+      const ix = -r * 0.3 + i * r * 0.3;
+      const ih = r * 0.25 + Math.sin(i * 2) * r * 0.08;
+      ctx.beginPath();
+      ctx.moveTo(ix - r * 0.06, r * 0.6);
+      ctx.lineTo(ix, r * 0.6 + ih);
+      ctx.lineTo(ix + r * 0.06, r * 0.6);
+      ctx.fill();
+    }
+    // Frost sparkles
+    ctx.fillStyle = '#fff';
+    for (let i = 0; i < 5; i++) {
+      const fx = (Math.sin(i * 3 + 1) * 0.6) * r;
+      const fy = (Math.cos(i * 2 + 0.5) * 0.5) * r;
+      ctx.globalAlpha = 0.4 + Math.sin(t * 0.06 + i * 1.5) * 0.3;
+      ctx.beginPath();
+      ctx.arc(fx, fy, r * 0.04, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // --- Ghost (semi-transparent + wobbly + spooky eyes) ---
+  if (sk.special === 'ghost') {
+    // Ghostly wobble overlay
+    ctx.save();
+    ctx.globalAlpha = 0.15 + Math.sin(t * 0.05) * 0.1;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(Math.sin(t * 0.03) * r * 0.05, 0, r * 0.9, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // Spooky eyes
+    ctx.fillStyle = '#333';
+    ctx.beginPath();
+    ctx.ellipse(-r * 0.22, -r * 0.1, r * 0.12, r * 0.15, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(r * 0.22, -r * 0.1, r * 0.12, r * 0.15, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Glowing pupils
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(-r * 0.22, -r * 0.12, r * 0.05, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(r * 0.22, -r * 0.12, r * 0.05, 0, Math.PI * 2);
+    ctx.fill();
+    // Open mouth
+    ctx.fillStyle = '#333';
+    ctx.beginPath();
+    ctx.ellipse(0, r * 0.2, r * 0.12, r * 0.1, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // --- Crown (golden crown on top) ---
+  if (sk.special === 'crown') {
+    ctx.fillStyle = '#ffd600';
+    ctx.strokeStyle = '#ff8f00';
+    ctx.lineWidth = Math.max(1, r * 0.04);
+    // Crown base
+    const cw = r * 0.7, ch = r * 0.35;
+    const cy2 = -r * 0.75;
+    ctx.beginPath();
+    ctx.moveTo(-cw / 2, cy2);
+    ctx.lineTo(-cw / 2, cy2 - ch * 0.4);
+    ctx.lineTo(-cw / 4, cy2 - ch * 0.15);
+    ctx.lineTo(0, cy2 - ch);
+    ctx.lineTo(cw / 4, cy2 - ch * 0.15);
+    ctx.lineTo(cw / 2, cy2 - ch * 0.4);
+    ctx.lineTo(cw / 2, cy2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    // Jewels on crown tips
+    const jewels = [[-cw / 2, cy2 - ch * 0.4], [0, cy2 - ch], [cw / 2, cy2 - ch * 0.4]];
+    const jColors = ['#f44336', '#2196f3', '#4caf50'];
+    for (let i = 0; i < 3; i++) {
+      ctx.fillStyle = jColors[i];
+      ctx.beginPath();
+      ctx.arc(jewels[i][0], jewels[i][1], r * 0.06, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Crown sparkle
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.globalAlpha = 0.5 + Math.sin(t * 0.08) * 0.3;
+    ctx.beginPath();
+    ctx.arc(r * 0.1, -r * 0.85, r * 0.04, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // --- Void (black hole swirl + pulling energy) ---
+  if (sk.special === 'void') {
+    // Swirling dark energy rings
+    for (let i = 0; i < 4; i++) {
+      const sa = t * 0.02 * (i % 2 === 0 ? 1 : -1) + i * 0.8;
+      const dist = r * 0.3 + i * r * 0.15;
+      ctx.save();
+      ctx.globalAlpha = 0.25 - i * 0.04;
+      ctx.strokeStyle = '#7c4dff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, dist, sa, sa + 2.5);
+      ctx.stroke();
+      ctx.restore();
+    }
+    // Center void glow
+    ctx.save();
+    ctx.globalAlpha = 0.4 + Math.sin(t * 0.05) * 0.2;
+    const vGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 0.5);
+    vGrad.addColorStop(0, '#7c4dff');
+    vGrad.addColorStop(1, 'rgba(26,0,51,0)');
+    ctx.fillStyle = vGrad;
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // Particles being sucked in
+    for (let i = 0; i < 5; i++) {
+      const pa = t * 0.04 + i * Math.PI * 0.4;
+      const pd = r * 0.8 - (t * 0.5 + i * 8) % (r * 0.6);
+      ctx.fillStyle = 'rgba(124,77,255,' + (0.6 - pd / (r * 0.8) * 0.4) + ')';
+      ctx.beginPath();
+      ctx.arc(Math.cos(pa) * pd, Math.sin(pa) * pd, r * 0.04, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
   ctx.restore();
 }
 
@@ -846,6 +1010,186 @@ export function drawBowl(ctx, cx, cy, w, h, skinId, t) {
       ctx.beginPath();
       ctx.arc(sx, sy, hw * 0.04, 0, Math.PI * 2);
       ctx.fill();
+    }
+  }
+
+  // --- Neon bowl (glowing green outline + flicker) ---
+  if (sk.special === 'neon') {
+    ctx.save();
+    const pulse = 0.6 + Math.sin(t * 0.06) * 0.4;
+    ctx.shadowColor = '#00e676';
+    ctx.shadowBlur = 10 * pulse;
+    ctx.strokeStyle = '#00e676';
+    ctx.lineWidth = Math.max(2, hw * 0.06);
+    ctx.globalAlpha = 0.7 + Math.sin(t * 0.06) * 0.3;
+    // Glow outline of bowl body
+    ctx.beginPath();
+    ctx.ellipse(0, hh * 0.45, hw * 0.98, hh * 0.35, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    // Rim glow
+    ctx.beginPath();
+    ctx.ellipse(0, -hh * 0.05, hw * 0.98, hh * 0.18, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+    // Flicker dots inside
+    for (let i = 0; i < 4; i++) {
+      const flk = (t * 0.04 + i * 1.7) % (Math.PI * 2);
+      const fx = Math.cos(flk) * hw * 0.4;
+      const fy = hh * 0.2 + Math.sin(flk * 1.3) * hh * 0.15;
+      ctx.fillStyle = 'rgba(0,230,118,' + (0.3 + Math.sin(t * 0.08 + i) * 0.2) + ')';
+      ctx.beginPath();
+      ctx.arc(fx, fy, hw * 0.035, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // --- Ice bowl (frost shimmer + icicles on rim) ---
+  if (sk.special === 'ice') {
+    // Frost shimmer
+    ctx.save();
+    ctx.globalAlpha = 0.12 + Math.sin(t * 0.03) * 0.06;
+    ctx.fillStyle = '#e1f5fe';
+    ctx.beginPath();
+    ctx.ellipse(0, hh * 0.1, hw * 0.75, hh * 0.45, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // Icicles hanging from rim
+    for (let i = 0; i < 5; i++) {
+      const ix = -hw * 0.6 + i * (hw * 0.3);
+      const iy = -hh * 0.05;
+      const ilen = hh * (0.15 + Math.sin(t * 0.02 + i * 1.2) * 0.04);
+      ctx.fillStyle = 'rgba(179,229,252,0.8)';
+      ctx.beginPath();
+      ctx.moveTo(ix - hw * 0.04, iy);
+      ctx.lineTo(ix + hw * 0.04, iy);
+      ctx.lineTo(ix, iy + ilen);
+      ctx.closePath();
+      ctx.fill();
+    }
+    // Frost sparkles
+    for (let i = 0; i < 3; i++) {
+      const sa = t * 0.02 + i * 2.1;
+      const fx = Math.cos(sa) * hw * 0.5;
+      const fy = hh * 0.15 + Math.sin(sa * 0.7) * hh * 0.2;
+      ctx.fillStyle = 'rgba(255,255,255,' + (0.4 + Math.sin(t * 0.05 + i) * 0.3) + ')';
+      ctx.beginPath();
+      ctx.arc(fx, fy, hw * 0.025, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // --- Ghost bowl (semi-transparent, spooky eyes) ---
+  if (sk.special === 'ghost') {
+    // Ghostly shimmer
+    ctx.save();
+    ctx.globalAlpha = 0.08 + Math.sin(t * 0.035) * 0.05;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.ellipse(0, hh * 0.1, hw * 0.6, hh * 0.4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // Spooky eyes inside bowl
+    const eyeY = hh * 0.15;
+    const eyeOff = hw * 0.22;
+    const blink = Math.sin(t * 0.03);
+    const eyeH = hw * 0.09 * (blink > 0.95 ? 0.2 : 1);
+    // Left eye
+    ctx.fillStyle = '#212121';
+    ctx.beginPath();
+    ctx.ellipse(-eyeOff, eyeY, hw * 0.08, eyeH, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Right eye
+    ctx.beginPath();
+    ctx.ellipse(eyeOff, eyeY, hw * 0.08, eyeH, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Pupils
+    ctx.fillStyle = '#f44336';
+    ctx.beginPath();
+    ctx.arc(-eyeOff, eyeY, hw * 0.03, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(eyeOff, eyeY, hw * 0.03, 0, Math.PI * 2);
+    ctx.fill();
+    // Mouth
+    ctx.fillStyle = '#424242';
+    ctx.beginPath();
+    ctx.ellipse(0, hh * 0.4, hw * 0.1, hw * 0.06, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // --- Crown bowl (golden crown on rim + jewels) ---
+  if (sk.special === 'crown') {
+    // Crown on the rim
+    const crW = hw * 0.7, crH = hh * 0.35;
+    const crY = -hh * 0.15;
+    ctx.fillStyle = '#ffd600';
+    // Crown base
+    ctx.fillRect(-crW * 0.5, crY, crW, crH * 0.4);
+    // Crown points (3 triangles)
+    for (let i = 0; i < 3; i++) {
+      const px = -crW * 0.35 + i * crW * 0.35;
+      ctx.beginPath();
+      ctx.moveTo(px - crW * 0.12, crY);
+      ctx.lineTo(px + crW * 0.12, crY);
+      ctx.lineTo(px, crY - crH * 0.6);
+      ctx.closePath();
+      ctx.fill();
+    }
+    // Jewels
+    const jewels = ['#f44336', '#2196f3', '#4caf50'];
+    for (let i = 0; i < 3; i++) {
+      ctx.fillStyle = jewels[i];
+      ctx.beginPath();
+      ctx.arc(-crW * 0.35 + i * crW * 0.35, crY - crH * 0.5, hw * 0.04, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Crown sparkle
+    const spkA = t * 0.04;
+    const spkX = Math.cos(spkA) * crW * 0.3;
+    ctx.fillStyle = 'rgba(255,255,255,' + (0.5 + Math.sin(t * 0.06) * 0.3) + ')';
+    ctx.beginPath();
+    ctx.arc(spkX, crY - crH * 0.3, hw * 0.03, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // --- Void bowl (black hole swirl + particles) ---
+  if (sk.special === 'void') {
+    // Swirling dark energy inside
+    for (let i = 0; i < 4; i++) {
+      const va = t * 0.02 + i * Math.PI * 0.5;
+      const vr = hw * (0.2 + i * 0.1);
+      const vx = Math.cos(va) * vr * 0.5;
+      const vy = hh * 0.15 + Math.sin(va) * hh * 0.2;
+      ctx.strokeStyle = 'rgba(124,77,255,' + (0.3 + Math.sin(t * 0.03 + i) * 0.15) + ')';
+      ctx.lineWidth = Math.max(1, hw * 0.03);
+      ctx.beginPath();
+      ctx.arc(vx, vy, vr * 0.3, va, va + Math.PI * 1.2);
+      ctx.stroke();
+    }
+    // Center void glow
+    ctx.save();
+    const voidG = ctx.createRadialGradient(0, hh * 0.2, 0, 0, hh * 0.2, hw * 0.3);
+    voidG.addColorStop(0, 'rgba(124,77,255,0.3)');
+    voidG.addColorStop(0.5, 'rgba(74,20,140,0.15)');
+    voidG.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = voidG;
+    ctx.beginPath();
+    ctx.arc(0, hh * 0.2, hw * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // Particles being pulled in
+    for (let i = 0; i < 5; i++) {
+      const pa = t * 0.015 + i * 1.26;
+      const pd = hw * (0.5 - ((t * 0.005 + i * 0.2) % 0.4));
+      const px = Math.cos(pa) * pd;
+      const py = hh * 0.2 + Math.sin(pa) * pd * 0.5;
+      const psz = hw * 0.02 * (1 - (pd / (hw * 0.5)));
+      if (psz > 0) {
+        ctx.fillStyle = 'rgba(124,77,255,' + (0.5 - pd / (hw * 0.5) * 0.3) + ')';
+        ctx.beginPath();
+        ctx.arc(px, py, Math.max(0.5, psz), 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
   }
 
