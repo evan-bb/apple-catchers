@@ -159,6 +159,7 @@ html,body{width:100%;height:100%;overflow:hidden;touch-action:none;user-select:n
 .pw-slot.empty{opacity:.3;}
 .pw-slot.active-glow{border-color:#ffd600;box-shadow:0 0 14px #ffd600;}
 .pw-slot-count{position:absolute;bottom:2px;right:4px;font-size:.55rem;font-weight:800;color:#ffd600;font-family:'Fredoka One',cursive;}
+.pw-timer{position:absolute;bottom:0;left:0;height:4px;border-radius:0 0 12px 12px;background:#ffd600;width:0;transition:width .15s linear;}
 
 
 .pu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:4px 0;}

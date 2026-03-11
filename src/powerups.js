@@ -24,12 +24,16 @@ export function usePower(slot) {
   var now = Date.now();
   if (pw.id === 'slow') {
     state.activeEffects.slow = now + pw.duration;
+    state.activeEffects.slow_start = now;
+    state.activeEffects.slow_dur = pw.duration;
     showToast('🐢 Slow activated!');
-    setTimeout(function() { delete state.activeEffects.slow; }, pw.duration);
+    setTimeout(function() { delete state.activeEffects.slow; delete state.activeEffects.slow_start; delete state.activeEffects.slow_dur; }, pw.duration);
   } else if (pw.id === 'double') {
     state.activeEffects.double = now + pw.duration;
+    state.activeEffects.double_start = now;
+    state.activeEffects.double_dur = pw.duration;
     showToast('💰 Double Coins!');
-    setTimeout(function() { delete state.activeEffects.double; }, pw.duration);
+    setTimeout(function() { delete state.activeEffects.double; delete state.activeEffects.double_start; delete state.activeEffects.double_dur; }, pw.duration);
   } else if (pw.id === 'destroy') {
     var bonus = 0;
     state.apples.forEach(function(a) {
@@ -45,8 +49,10 @@ export function usePower(slot) {
     sfxLevelUp();
   } else if (pw.id === 'teleport') {
     state.activeEffects.teleport = now + pw.duration;
+    state.activeEffects.teleport_start = now;
+    state.activeEffects.teleport_dur = pw.duration;
     showToast('🧲 Teleport active!');
-    setTimeout(function() { delete state.activeEffects.teleport; }, pw.duration);
+    setTimeout(function() { delete state.activeEffects.teleport; delete state.activeEffects.teleport_start; delete state.activeEffects.teleport_dur; }, pw.duration);
   } else if (pw.id === 'mapskip') {
     // Only win if on Dimension (the final map)
     if (state.save.equippedMap === 'dimension') {
@@ -83,23 +89,39 @@ export function getEquippedPowers() {
 
 export function updatePowerBar() {
   var equipped = getEquippedPowers();
+  var now = Date.now();
   for (var i = 0; i < 3; i++) {
     var slot = document.getElementById('pwSlot' + i);
     var iconEl = document.getElementById('pwIcon' + i);
     var countEl = document.getElementById('pwCount' + i);
+    var timerEl = document.getElementById('pwTimer' + i);
     var pw = equipped[i];
 
     if (!pw) {
       slot.className = 'pw-slot empty';
       iconEl.textContent = '';
       countEl.textContent = '';
+      if (timerEl) timerEl.style.width = '0';
       continue;
     }
 
     var qty = getPowerCount(pw.id);
-    slot.className = 'pw-slot' + (state.activeEffects[pw.id] ? ' active-glow' : '');
+    var isActive = !!state.activeEffects[pw.id];
+    slot.className = 'pw-slot' + (isActive ? ' active-glow' : '');
     iconEl.textContent = pw.emoji;
     countEl.textContent = qty > 1 ? 'x' + qty : '';
+
+    // Timer bar — shows how much time is left
+    if (timerEl) {
+      if (isActive && state.activeEffects[pw.id + '_dur']) {
+        var elapsed = now - state.activeEffects[pw.id + '_start'];
+        var total = state.activeEffects[pw.id + '_dur'];
+        var pct = Math.max(0, 1 - elapsed / total) * 100;
+        timerEl.style.width = pct + '%';
+      } else {
+        timerEl.style.width = '0';
+      }
+    }
   }
 }
 
