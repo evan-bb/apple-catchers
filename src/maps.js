@@ -24,6 +24,8 @@ export function drawMap(mapId) {
     case 'dimension':  drawDimension();  break;
     case 'hell':       drawHell();       break;
     case 'heaven':     drawHeaven();     break;
+    case 'emptiness':  drawEmptiness();  break;
+    case 'rainbow':    drawRainbow();    break;
     default:           drawMeadow();     break;
   }
 }
@@ -2534,4 +2536,216 @@ function drawHeaven() {
   }
   ctx.lineTo(W, H);
   ctx.fill();
+}
+
+// ═══════════════════════════════════════════════════
+// EMPTINESS
+// ═══════════════════════════════════════════════════
+function drawEmptiness() {
+  const { ctx, W, H, frame } = state;
+
+  // Pure white background
+  ctx.fillStyle = '#f8f8f8';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid dots
+  ctx.fillStyle = 'rgba(0,0,0,0.04)';
+  for (let gx = 0; gx < W; gx += 40) {
+    for (let gy = 0; gy < H; gy += 40) {
+      ctx.beginPath();
+      ctx.arc(gx, gy, 1, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // 10 floating shapes — seeded by index so they stay consistent
+  const shapes = [
+    { type:'circle', x:0.15, y:0.2, size:18, col:'rgba(255,150,150,0.35)', speed:0.008, drift:0.006 },
+    { type:'square', x:0.75, y:0.15, size:14, col:'rgba(150,150,255,0.35)', speed:0.006, drift:0.009 },
+    { type:'tri',    x:0.4,  y:0.35, size:16, col:'rgba(150,255,150,0.35)', speed:0.01,  drift:0.005 },
+    { type:'circle', x:0.85, y:0.5,  size:12, col:'rgba(255,220,100,0.35)', speed:0.007, drift:0.008 },
+    { type:'square', x:0.25, y:0.6,  size:20, col:'rgba(200,150,255,0.35)', speed:0.005, drift:0.01  },
+    { type:'tri',    x:0.6,  y:0.1,  size:15, col:'rgba(100,220,255,0.35)', speed:0.009, drift:0.007 },
+    { type:'circle', x:0.5,  y:0.55, size:22, col:'rgba(255,180,200,0.35)', speed:0.004, drift:0.006 },
+    { type:'square', x:0.1,  y:0.4,  size:10, col:'rgba(180,255,180,0.35)', speed:0.011, drift:0.008 },
+    { type:'tri',    x:0.9,  y:0.3,  size:13, col:'rgba(255,255,150,0.35)', speed:0.006, drift:0.009 },
+    { type:'circle', x:0.35, y:0.75, size:16, col:'rgba(150,200,255,0.35)', speed:0.008, drift:0.005 },
+  ];
+
+  for (let i = 0; i < shapes.length; i++) {
+    const s = shapes[i];
+    const sx = s.x * W + Math.sin(frame * s.drift + i * 2) * 30;
+    const sy = s.y * H + Math.cos(frame * s.speed + i * 3) * 25;
+    const rot = frame * 0.01 * (i % 2 === 0 ? 1 : -1);
+
+    ctx.save();
+    ctx.translate(sx, sy);
+    ctx.rotate(rot);
+    ctx.fillStyle = s.col;
+    ctx.strokeStyle = s.col.replace('0.35', '0.5');
+    ctx.lineWidth = 1.5;
+
+    if (s.type === 'circle') {
+      ctx.beginPath();
+      ctx.arc(0, 0, s.size, 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke();
+    } else if (s.type === 'square') {
+      ctx.beginPath();
+      ctx.rect(-s.size, -s.size, s.size * 2, s.size * 2);
+      ctx.fill(); ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(0, -s.size);
+      ctx.lineTo(s.size, s.size);
+      ctx.lineTo(-s.size, s.size);
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Faint floor line
+  ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, H - 60);
+  ctx.lineTo(W, H - 60);
+  ctx.stroke();
+}
+
+// ═══════════════════════════════════════════════════
+// RAINBOW
+// ═══════════════════════════════════════════════════
+function drawRainbow() {
+  const { ctx, W, H, frame } = state;
+
+  // Light blue sky
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, H * 0.7);
+  skyGrad.addColorStop(0, '#87ceeb');
+  skyGrad.addColorStop(1, '#c8e6ff');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Sun in top corner
+  const sunX = W * 0.85, sunY = H * 0.1;
+  ctx.save();
+  ctx.globalAlpha = 0.3;
+  ctx.fillStyle = '#fff700';
+  ctx.beginPath();
+  ctx.arc(sunX, sunY, 40, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#ffeb3b';
+  ctx.beginPath();
+  ctx.arc(sunX, sunY, 24, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Big rainbow arc across the sky
+  const rainbowColors = ['#ff0000','#ff7f00','#ffff00','#00ff00','#0000ff','#4b0082','#8b00ff'];
+  const arcCX = W * 0.5, arcCY = H * 0.75;
+  const baseR = Math.min(W, H) * 0.55;
+  for (let i = 0; i < rainbowColors.length; i++) {
+    ctx.strokeStyle = rainbowColors[i];
+    ctx.lineWidth = 8;
+    ctx.globalAlpha = 0.55;
+    ctx.beginPath();
+    ctx.arc(arcCX, arcCY, baseR - i * 9, Math.PI, 0);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  // Green rolling hills
+  curvedGround('#4caf50', '#388e3c', 70, 30);
+
+  // Left pot of gold
+  const potLX = arcCX - baseR + 10, potLY = H - 75;
+  drawPotOfGold(ctx, potLX, potLY, frame);
+
+  // Right pot of gold
+  const potRX = arcCX + baseR - 10, potRY = H - 75;
+  drawPotOfGold(ctx, potRX, potRY, frame);
+
+  // Scattered gold coins on the ground
+  ctx.fillStyle = '#ffd700';
+  const coinSeeds = [0.1, 0.2, 0.35, 0.5, 0.65, 0.8, 0.9];
+  for (const cs of coinSeeds) {
+    const cx = W * cs + Math.sin(cs * 30) * 10;
+    const cy = H - 40 + Math.sin(cs * 20) * 8;
+    ctx.globalAlpha = 0.6;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, 4, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  // Sparkles around the rainbow
+  for (let i = 0; i < 12; i++) {
+    const angle = Math.PI + (i / 12) * Math.PI;
+    const dist = baseR - 30 + Math.sin(frame * 0.03 + i * 2) * 20;
+    const sx = arcCX + Math.cos(angle) * dist;
+    const sy = arcCY + Math.sin(angle) * dist;
+    if (sy > H - 60) continue;
+    const sparkSize = 2 + Math.sin(frame * 0.05 + i) * 1.5;
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.beginPath();
+    ctx.arc(sx, sy, sparkSize, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Small clovers on the ground
+  for (let i = 0; i < 5; i++) {
+    const cx = W * (0.1 + i * 0.2) + Math.sin(i * 7) * 15;
+    const cy = H - 48 + Math.sin(i * 5) * 5;
+    drawClover(ctx, cx, cy, 4);
+  }
+}
+
+function drawPotOfGold(ctx, x, y, frame) {
+  // Pot body (dark rounded trapezoid)
+  ctx.fillStyle = '#2a2a2a';
+  ctx.beginPath();
+  ctx.moveTo(x - 14, y);
+  ctx.lineTo(x - 10, y - 18);
+  ctx.lineTo(x + 10, y - 18);
+  ctx.lineTo(x + 14, y);
+  ctx.closePath();
+  ctx.fill();
+
+  // Pot rim
+  ctx.fillStyle = '#3a3a3a';
+  ctx.beginPath();
+  ctx.ellipse(x, y - 18, 12, 4, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Gold pile on top
+  ctx.fillStyle = '#ffd700';
+  ctx.beginPath();
+  ctx.arc(x - 4, y - 20, 5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(x + 4, y - 20, 5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(x, y - 24, 4, 0, Math.PI * 2); ctx.fill();
+
+  // Gold glow
+  ctx.save();
+  ctx.globalAlpha = 0.3 + Math.sin(frame * 0.04) * 0.15;
+  ctx.fillStyle = '#ffd700';
+  ctx.beginPath();
+  ctx.arc(x, y - 20, 18, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawClover(ctx, x, y, s) {
+  ctx.fillStyle = '#2e7d32';
+  // stem
+  ctx.fillRect(x - 0.5, y, 1, s * 2);
+  // 4 leaves
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2 - Math.PI / 4;
+    ctx.beginPath();
+    ctx.ellipse(x + Math.cos(a) * s * 0.6, y - Math.sin(a) * s * 0.6, s * 0.5, s * 0.35, a, 0, Math.PI * 2);
+    ctx.fill();
+  }
 }

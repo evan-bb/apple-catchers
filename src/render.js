@@ -403,6 +403,65 @@ export function drawApple(ctx, x, y, r, skinId, angle, t) {
     ctx.fill();
   }
 
+  // --- Leprechaun (green top hat + gold buckle + clover) ---
+  if (sk.special === 'leprechaun') {
+    // Top hat
+    const hatW = r * 0.7, hatH = r * 0.55;
+    ctx.fillStyle = '#2e7d32';
+    // Hat brim
+    ctx.beginPath();
+    ctx.ellipse(0, -r * 0.72, hatW * 0.85, r * 0.1, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Hat body
+    ctx.fillRect(-hatW * 0.45, -r * 0.72 - hatH, hatW * 0.9, hatH);
+    // Hat top
+    ctx.beginPath();
+    ctx.ellipse(0, -r * 0.72 - hatH, hatW * 0.45, r * 0.06, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Gold band
+    ctx.fillStyle = '#ffd700';
+    ctx.fillRect(-hatW * 0.45, -r * 0.72 - hatH * 0.3, hatW * 0.9, hatH * 0.18);
+    // Gold buckle
+    ctx.strokeStyle = '#ffd700';
+    ctx.lineWidth = Math.max(1, r * 0.06);
+    ctx.strokeRect(-r * 0.08, -r * 0.72 - hatH * 0.38, r * 0.16, hatH * 0.32);
+
+    // Clover on the side
+    ctx.fillStyle = '#1b5e20';
+    const clx = r * 0.55, cly = r * 0.1;
+    ctx.fillRect(clx - 0.5, cly, 1, r * 0.2);
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2 - Math.PI / 4;
+      ctx.beginPath();
+      ctx.ellipse(clx + Math.cos(a) * r * 0.08, cly - Math.sin(a) * r * 0.08, r * 0.07, r * 0.05, a, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // --- Dark (black body + purple shimmer + glow) ---
+  if (sk.special === 'dark') {
+    // Dark purple glow effect
+    ctx.save();
+    ctx.globalAlpha = 0.2 + Math.sin(t * 0.04) * 0.1;
+    ctx.shadowColor = '#7b1fa2';
+    ctx.shadowBlur = 15;
+    ctx.fillStyle = '#7b1fa2';
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.85, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // Subtle purple sparkles
+    for (let i = 0; i < 4; i++) {
+      const sa = t * 0.02 + i * Math.PI / 2;
+      const sx = Math.cos(sa) * r * 0.5;
+      const sy = Math.sin(sa) * r * 0.5;
+      ctx.fillStyle = 'rgba(180,100,255,' + (0.3 + Math.sin(t * 0.05 + i) * 0.2) + ')';
+      ctx.beginPath();
+      ctx.arc(sx, sy, r * 0.06, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
   ctx.restore();
 }
 
@@ -729,6 +788,65 @@ export function drawBowl(ctx, cx, cy, w, h, skinId, t) {
     ctx.beginPath();
     ctx.arc(hw * 0.42, hh * 0.35, hw * 0.07, 0, Math.PI * 2);
     ctx.fill();
+  }
+
+  // --- Leprechaun bowl (top hat on rim + clover) ---
+  if (sk.special === 'leprechaun') {
+    // Small top hat sitting on the left rim
+    const hatW = hw * 0.5, hatH = hh * 0.5;
+    const hatX = -hw * 0.4, hatY = -hh * 0.3;
+    ctx.fillStyle = '#2e7d32';
+    // Hat brim
+    ctx.beginPath();
+    ctx.ellipse(hatX, hatY, hatW * 0.8, hh * 0.08, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Hat body
+    ctx.fillRect(hatX - hatW * 0.4, hatY - hatH, hatW * 0.8, hatH);
+    // Hat top
+    ctx.beginPath();
+    ctx.ellipse(hatX, hatY - hatH, hatW * 0.4, hh * 0.05, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Gold band
+    ctx.fillStyle = '#ffd700';
+    ctx.fillRect(hatX - hatW * 0.4, hatY - hatH * 0.35, hatW * 0.8, hatH * 0.18);
+    // Gold buckle
+    ctx.strokeStyle = '#ffd700';
+    ctx.lineWidth = Math.max(1, hw * 0.04);
+    ctx.strokeRect(hatX - hw * 0.06, hatY - hatH * 0.42, hw * 0.12, hatH * 0.3);
+
+    // Clover on the right side
+    ctx.fillStyle = '#1b5e20';
+    const clx = hw * 0.5, cly = hh * 0.15;
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2 - Math.PI / 4;
+      ctx.beginPath();
+      ctx.ellipse(clx + Math.cos(a) * hw * 0.06, cly - Math.sin(a) * hw * 0.06, hw * 0.05, hw * 0.035, a, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // --- Dark bowl (black + purple shimmer) ---
+  if (sk.special === 'dark') {
+    // Purple glow
+    ctx.save();
+    ctx.globalAlpha = 0.15 + Math.sin(t * 0.04) * 0.08;
+    ctx.shadowColor = '#7b1fa2';
+    ctx.shadowBlur = 12;
+    ctx.fillStyle = '#7b1fa2';
+    ctx.beginPath();
+    ctx.ellipse(0, hh * 0.1, hw * 0.7, hh * 0.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    // Purple sparkles inside
+    for (let i = 0; i < 3; i++) {
+      const sa = t * 0.025 + i * Math.PI * 0.67;
+      const sx = Math.cos(sa) * hw * 0.3;
+      const sy = hh * 0.1 + Math.sin(sa) * hh * 0.2;
+      ctx.fillStyle = 'rgba(180,100,255,' + (0.3 + Math.sin(t * 0.04 + i) * 0.15) + ')';
+      ctx.beginPath();
+      ctx.arc(sx, sy, hw * 0.04, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
   ctx.restore();

@@ -18,6 +18,8 @@ export const APPLE_SKINS = [
   { id:'dog',     name:'Dog',     body:'#8d6534', dark:'#6d4c2a', shine:'#d4a66a', leaf:'#43a047', stem:'#5d4037', special:'dog' },
   { id:'demon',   name:'Demon',   body:'#8b0000', dark:'#4a0000', shine:'#ff4444', leaf:'#2a0000', stem:'#1a0000', special:'demon' },
   { id:'angel',   name:'Angel',   body:'#f0f0ff', dark:'#c8c8e8', shine:'#ffffff', leaf:'#d4af37', stem:'#c0a030', special:'angel' },
+  { id:'leprechaun', name:'Leprechaun', body:'#43a047', dark:'#2e7d32', shine:'#a5d6a7', leaf:'#1b5e20', stem:'#33691e', special:'leprechaun', event:true },
+  { id:'dark',    name:'Dark',    body:'#1a1a2e', dark:'#0d0d1a', shine:'#4a0072', leaf:'#1a0033', stem:'#0d001a', special:'dark' },
 ];
 
 // Bowl skins
@@ -35,14 +37,16 @@ export const BOWL_SKINS = [
   { id:'dog',     name:'Dog',     rim:'#6d4c2a', body:'#8d6534', inside:'#d4aa7a', dark:'#5a3a1a', special:'dog' },
   { id:'demon',   name:'Demon',   rim:'#4a0000', body:'#8b0000', inside:'#3a0000', dark:'#2a0000', special:'demon' },
   { id:'angel',   name:'Angel',   rim:'#d0d0e8', body:'#f0f0ff', inside:'#ffffff', dark:'#b0b0d0', special:'angel' },
+  { id:'leprechaun', name:'Leprechaun', rim:'#2e7d32', body:'#43a047', inside:'#a5d6a7', dark:'#1b5e20', special:'leprechaun', event:true },
+  { id:'dark',    name:'Dark',    rim:'#1a1a2e', body:'#0d0d1a', inside:'#1a0033', dark:'#0a0a15', special:'dark' },
 ];
 
 // Chests — rewards are arrays of skin IDs that can drop
 export const CHESTS = [
   { id:'wooden',  name:'Wooden',  cost:50,  topCol:'#5d4037', bodyCol:'#795548', lockCol:'#ffd600',
-    appleRewards:['golden','green'], bowlRewards:['wood','silver'] },
+    appleRewards:['golden','green','leprechaun'], bowlRewards:['wood','silver','leprechaun'] },
   { id:'silver',  name:'Silver',  cost:150, topCol:'#9e9e9e', bodyCol:'#e0e0e0', lockCol:'#ffd600',
-    appleRewards:['golden','green','pink'], bowlRewards:['silver','crystal'] },
+    appleRewards:['golden','green','pink','leprechaun'], bowlRewards:['silver','crystal','leprechaun'] },
   { id:'golden',  name:'Golden',  cost:300, topCol:'#f9a825', bodyCol:'#ffd600', lockCol:'#fff',
     appleRewards:['rainbow','diamond','galaxy'], bowlRewards:['golden','crystal','lava'] },
   { id:'mystery', name:'Mystery', cost:200, topCol:'#7c4dff', bodyCol:'#5c35c5', lockCol:'#e040fb',
@@ -91,7 +95,48 @@ export const MAPS = [
   { id:'dimension', name:'Dimension',  emoji:'🌀', req:900, desc:'Catch 900 apples total' },
   { id:'hell',      name:'Hell',       emoji:'😈', req:950, desc:'Catch 950 apples total' },
   { id:'heaven',    name:'Heaven',     emoji:'😇', req:1000,desc:'Catch 1000 apples total' },
+  { id:'emptiness', name:'Emptiness',  emoji:'⬜', req:1100,desc:'Catch 1100 apples total' },
+  { id:'rainbow',   name:'Rainbow',    emoji:'🌈', req:1200,desc:'Catch 1200 apples total' },
 ];
+
+// Rarity for every skin (apple + bowl share IDs where they overlap)
+export const RARITY = {
+  // Apple skins
+  classic:'common', green:'common', pink:'common',
+  golden:'uncommon', smiley:'uncommon', leprechaun:'uncommon',
+  galaxy:'rare', lava:'rare', pixel:'rare',
+  rainbow:'epic', diamond:'epic', dog:'epic',
+  comet:'exotic', solar:'exotic', dune:'exotic', aurora:'exotic', sugar:'exotic',
+  demon:'exotic', angel:'exotic',
+  dark:'mythical',
+  // Bowl-only skins
+  silver:'uncommon', wood:'rare', crystal:'rare',
+};
+
+export const RARITY_COLORS = {
+  common:'#aaa', uncommon:'#4caf50', rare:'#2196f3',
+  epic:'#9c27b0', exotic:'#ff9800', mythical:'#f44336',
+};
+
+export const RARITY_ORDER = ['common','uncommon','rare','epic','exotic','mythical'];
+
+// Shards — collect 10 of a type to redeem for exclusive items
+export const SHARDS = [
+  { id:'bronze', name:'Bronze Shard', emoji:'🟫', color:'#cd7f32', cost:10,
+    rewards: ['pixel','wood'] },
+  { id:'silver', name:'Silver Shard', emoji:'⬜', color:'#c0c0c0', cost:10,
+    rewards: ['diamond','crystal'] },
+  { id:'gold',   name:'Gold Shard',   emoji:'🟡', color:'#ffd700', cost:10,
+    rewards: ['dark'] },
+];
+
+// Merchant — prices for direct-buy items
+export const MERCHANT_PRICES = {
+  // Skins cost based on rarity
+  common:30, uncommon:80, rare:200, epic:400, exotic:600, mythical:1000,
+  // Power-ups
+  slow:60, double:60, destroy:150, teleport:150, mapskip:400,
+};
 
 // Map rewards (auto-claimed when unlocking map)
 export var MAP_REWARDS = {

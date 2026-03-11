@@ -58,5 +58,6 @@ export const state = {
     powers:         {},
     claimedRewards: {},
     difficulty: 'easy',
+    shards: { bronze: 0, silver: 0, gold: 0 },
   },
 };

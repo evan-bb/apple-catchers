@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { APPLE_SKINS, BOWL_SKINS, CHESTS, POWERUPS, POWER_CHEST, MAPS, MAP_REWARDS } from './data.js';
+import { APPLE_SKINS, BOWL_SKINS, CHESTS, POWERUPS, POWER_CHEST, MAPS, MAP_REWARDS, RARITY, RARITY_COLORS, SHARDS, MERCHANT_PRICES } from './data.js';
 import { writeSave } from './save.js';
 import { getPowerCount, addPower } from './powerups.js';
 import { drawApple, drawBowl, drawChest } from './render.js';
@@ -94,6 +94,8 @@ export function renderShop() {
   renderPowerGrid();
   renderMapRewards();
   renderMapGrid();
+  renderShardGrid();
+  renderMerchantGrid();
 }
 
 export function renderChestGrid() {
@@ -167,6 +169,20 @@ export function renderSkinGrid(type) {
     const nm = el('div', 'skin-name');
     nm.textContent = sk.name;
     card.appendChild(nm);
+
+    // Rarity tag
+    const rar = RARITY[sk.id] || 'common';
+    const rarTag = el('div', 'rarity-tag');
+    rarTag.textContent = rar.charAt(0).toUpperCase() + rar.slice(1);
+    rarTag.style.background = RARITY_COLORS[rar] || '#aaa';
+    card.appendChild(rarTag);
+
+    // Event tag
+    if (sk.event) {
+      const evTag = el('div', 'event-tag');
+      evTag.textContent = '🍀 Event';
+      card.appendChild(evTag);
+    }
 
     // Badge
     if (isEquipped) {
@@ -296,10 +312,21 @@ export function buyChest(id) {
   const alreadyHave = skin.id === 'classic' || ownedArr.includes(skin.id);
   if (!alreadyHave) { ownedArr.push(skin.id); writeSave(); }
 
-  openChestAnim(ch, skin, giveApple, alreadyHave);
+  // ~8% bonus chance to also get a shard
+  var shardDrop = null;
+  if (Math.random() < 0.08) {
+    if (!state.save.shards) state.save.shards = { bronze:0, silver:0, gold:0 };
+    var r = Math.random();
+    if (r < 0.02)      { state.save.shards.gold++;   shardDrop = 'gold'; }
+    else if (r < 0.05) { state.save.shards.silver++; shardDrop = 'silver'; }
+    else               { state.save.shards.bronze++; shardDrop = 'bronze'; }
+    writeSave();
+  }
+
+  openChestAnim(ch, skin, giveApple, alreadyHave, shardDrop);
 }
 
-export function openChestAnim(ch, skin, isApple, duplicate) {
+export function openChestAnim(ch, skin, isApple, duplicate, shardDrop) {
   const overlay  = document.getElementById('chestOpen');
   const chestC   = document.getElementById('chestOpenCanvas');
   const revealC  = document.getElementById('chestRevealCanvas');
@@ -338,9 +365,229 @@ export function openChestAnim(ch, skin, isApple, duplicate) {
     else         drawBowl(rc,  70, 84, 126, 46, skin.id, 0);
 
     msgEl.textContent  = duplicate ? 'Already have ' + skin.name + '!' : '🎉 New! ' + skin.name;
-    subEl.textContent  = duplicate ? 'Duplicate — keep opening!' : (isApple ? 'Apple' : 'Bowl') + ' skin unlocked!';
+    var subText = duplicate ? 'Duplicate — keep opening!' : (isApple ? 'Apple' : 'Bowl') + ' skin unlocked!';
+    if (shardDrop) {
+      var shardEmoji = shardDrop === 'gold' ? '🟡' : shardDrop === 'silver' ? '⬜' : '🟫';
+      subText += ' + ' + shardEmoji + ' ' + shardDrop.charAt(0).toUpperCase() + shardDrop.slice(1) + ' Shard!';
+    }
+    subEl.textContent = subText;
     closeBtn.style.display = 'block';
     updateAllCoins();
     renderShop();
   }, 1100);
+}
+
+// ── Shard Grid ──────────────────────────────────
+export function renderShardGrid() {
+  var grid = document.getElementById('shardGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  if (!state.save.shards) state.save.shards = { bronze:0, silver:0, gold:0 };
+
+  SHARDS.forEach(function(sh) {
+    var count = state.save.shards[sh.id] || 0;
+    var card = el('div', 'shard-card');
+    card.style.borderColor = sh.color;
+
+    var icon = el('div', 'shard-icon');
+    icon.textContent = sh.emoji;
+    card.appendChild(icon);
+
+    var nm = el('div', 'shard-name');
+    nm.textContent = sh.name;
+    nm.style.color = sh.color;
+    card.appendChild(nm);
+
+    var ct = el('div', 'shard-count');
+    ct.textContent = count + ' / ' + sh.cost;
+    card.appendChild(ct);
+
+    // Progress bar
+    var barWrap = el('div', 'shard-bar-wrap');
+    var barFill = el('div', 'shard-bar-fill');
+    barFill.style.width = Math.min(100, (count / sh.cost) * 100) + '%';
+    barFill.style.background = sh.color;
+    barWrap.appendChild(barFill);
+    card.appendChild(barWrap);
+
+    if (count >= sh.cost) {
+      var btn = el('button', 'shard-redeem-btn');
+      btn.textContent = '✨ Redeem';
+      btn.addEventListener('click', function() { redeemShard(sh.id); });
+      card.appendChild(btn);
+    }
+
+    grid.appendChild(card);
+  });
+}
+
+function redeemShard(shardId) {
+  var sh = SHARDS.find(function(s) { return s.id === shardId; });
+  if (!sh) return;
+  if (!state.save.shards) state.save.shards = { bronze:0, silver:0, gold:0 };
+  if ((state.save.shards[shardId] || 0) < sh.cost) { showToast('Not enough shards!'); return; }
+
+  state.save.shards[shardId] -= sh.cost;
+
+  // Pick a random reward — could be apple or bowl version
+  var rewardId = sh.rewards[Math.floor(Math.random() * sh.rewards.length)];
+  var giveApple = Math.random() < 0.5;
+  var skinList = giveApple ? APPLE_SKINS : BOWL_SKINS;
+  var skin = skinList.find(function(s) { return s.id === rewardId; });
+
+  // If that skin doesn't exist in the chosen list, try the other list
+  if (!skin) {
+    giveApple = !giveApple;
+    skinList = giveApple ? APPLE_SKINS : BOWL_SKINS;
+    skin = skinList.find(function(s) { return s.id === rewardId; });
+  }
+  if (!skin) { showToast('Something went wrong!'); return; }
+
+  var ownedArr = giveApple ? state.save.unlockedApples : state.save.unlockedBowls;
+  var alreadyHave = ownedArr.includes(skin.id);
+  if (!alreadyHave) { ownedArr.push(skin.id); }
+  writeSave();
+  updateAllCoins();
+  renderShop();
+
+  if (alreadyHave) {
+    showToast('Already have ' + skin.name + '! Shards refunded.');
+    state.save.shards[shardId] += sh.cost;
+    writeSave();
+    renderShop();
+  } else {
+    showToast('✨ Unlocked ' + skin.name + ' ' + (giveApple ? 'Apple' : 'Bowl') + '!');
+    sfxLevelUp();
+  }
+}
+
+// ── Merchant Grid ───────────────────────────────
+export function renderMerchantGrid() {
+  var grid = document.getElementById('merchantGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  // Generate 3 random items each time shop opens
+  var items = generateMerchantItems();
+
+  items.forEach(function(item) {
+    var card = el('div', 'merchant-card');
+
+    if (item.type === 'skin') {
+      // Skin item
+      var pc = el('canvas');
+      pc.width = 60; pc.height = 60;
+      pc.style.display = 'block';
+      var pctx = pc.getContext('2d');
+      if (item.skinType === 'apple') {
+        drawApple(pctx, 30, 34, 22, item.skin.id, 0, 0);
+      } else {
+        drawBowl(pctx, 30, 34, 56, 22, item.skin.id, 0);
+      }
+      card.appendChild(pc);
+
+      var nm = el('div', 'merchant-name');
+      nm.textContent = item.skin.name + ' ' + (item.skinType === 'apple' ? '🍎' : '🥣');
+      card.appendChild(nm);
+
+      var rar = RARITY[item.skin.id] || 'common';
+      var rarTag = el('div', 'rarity-tag');
+      rarTag.textContent = rar.charAt(0).toUpperCase() + rar.slice(1);
+      rarTag.style.background = RARITY_COLORS[rar] || '#aaa';
+      card.appendChild(rarTag);
+
+      // Check if already owned
+      var ownedArr = item.skinType === 'apple' ? state.save.unlockedApples : state.save.unlockedBowls;
+      var owned = item.skin.id === 'classic' || ownedArr.includes(item.skin.id);
+
+      var cost = el('div', 'merchant-cost');
+      cost.textContent = owned ? '✓ Owned' : item.price + ' 🪙';
+      card.appendChild(cost);
+
+      if (!owned) {
+        var btn = el('button', 'merchant-buy-btn');
+        btn.textContent = 'Buy';
+        btn.disabled = state.save.coins < item.price;
+        btn.addEventListener('click', function() {
+          if (state.save.coins < item.price) { showToast('Not enough coins!'); return; }
+          state.save.coins -= item.price;
+          ownedArr.push(item.skin.id);
+          writeSave();
+          updateAllCoins();
+          renderShop();
+          showToast('🍀 Bought ' + item.skin.name + '!');
+          sfxLevelUp();
+        });
+        card.appendChild(btn);
+      }
+    } else {
+      // Power-up item
+      var icon = el('div', 'merchant-pw-icon');
+      icon.textContent = item.power.emoji;
+      card.appendChild(icon);
+
+      var nm2 = el('div', 'merchant-name');
+      nm2.textContent = item.power.name;
+      card.appendChild(nm2);
+
+      var desc = el('div', 'merchant-desc');
+      desc.textContent = item.power.desc;
+      card.appendChild(desc);
+
+      var cost2 = el('div', 'merchant-cost');
+      cost2.textContent = item.price + ' 🪙';
+      card.appendChild(cost2);
+
+      var btn2 = el('button', 'merchant-buy-btn');
+      btn2.textContent = 'Buy';
+      btn2.disabled = state.save.coins < item.price;
+      btn2.addEventListener('click', function() {
+        if (state.save.coins < item.price) { showToast('Not enough coins!'); return; }
+        state.save.coins -= item.price;
+        addPower(item.power.id);
+        writeSave();
+        updateAllCoins();
+        renderShop();
+        showToast('🍀 Bought ' + item.power.name + '!');
+        sfxLevelUp();
+      });
+      card.appendChild(btn2);
+    }
+
+    grid.appendChild(card);
+  });
+}
+
+function generateMerchantItems() {
+  var items = [];
+  var usedIds = [];
+
+  for (var i = 0; i < 3; i++) {
+    // 60% chance skin, 40% chance power-up
+    if (Math.random() < 0.6) {
+      // Random skin (apple or bowl)
+      var isApple = Math.random() < 0.5;
+      var skinList = isApple ? APPLE_SKINS : BOWL_SKINS;
+      // Filter out shard-exclusive (dark) and already-used
+      var pool = skinList.filter(function(s) {
+        return s.id !== 'classic' && s.id !== 'dark' && usedIds.indexOf(s.id + (isApple ? 'a' : 'b')) === -1;
+      });
+      if (pool.length === 0) continue;
+      var skin = pool[Math.floor(Math.random() * pool.length)];
+      var rar = RARITY[skin.id] || 'common';
+      var price = MERCHANT_PRICES[rar] || 100;
+      usedIds.push(skin.id + (isApple ? 'a' : 'b'));
+      items.push({ type:'skin', skin:skin, skinType: isApple ? 'apple' : 'bowl', price:price });
+    } else {
+      // Random power-up
+      var pwPool = POWERUPS.filter(function(p) { return usedIds.indexOf('pw_' + p.id) === -1; });
+      if (pwPool.length === 0) continue;
+      var pw = pwPool[Math.floor(Math.random() * pwPool.length)];
+      var price2 = MERCHANT_PRICES[pw.id] || 100;
+      usedIds.push('pw_' + pw.id);
+      items.push({ type:'power', power:pw, price:price2 });
+    }
+  }
+
+  return items;
 }
