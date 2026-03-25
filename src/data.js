@@ -54,9 +54,9 @@ export const BOWL_SKINS = [
 // Chests — rewards are arrays of skin IDs that can drop
 export const CHESTS = [
   { id:'wooden',  name:'Wooden',  cost:50,  topCol:'#5d4037', bodyCol:'#795548', lockCol:'#ffd600',
-    appleRewards:['golden','green','leprechaun'], bowlRewards:['wood','silver','leprechaun'] },
+    appleRewards:['golden','green'], bowlRewards:['wood','silver'] },
   { id:'silver',  name:'Silver',  cost:150, topCol:'#9e9e9e', bodyCol:'#e0e0e0', lockCol:'#ffd600',
-    appleRewards:['golden','green','pink','leprechaun'], bowlRewards:['silver','crystal','leprechaun'] },
+    appleRewards:['golden','green','pink'], bowlRewards:['silver','crystal'] },
   { id:'golden',  name:'Golden',  cost:300, topCol:'#f9a825', bodyCol:'#ffd600', lockCol:'#fff',
     appleRewards:['rainbow','diamond','galaxy'], bowlRewards:['golden','crystal','lava'] },
   { id:'mystery', name:'Mystery', cost:200, topCol:'#7c4dff', bodyCol:'#5c35c5', lockCol:'#e040fb',

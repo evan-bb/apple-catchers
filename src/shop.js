@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { APPLE_SKINS, BOWL_SKINS, CHESTS, POWERUPS, POWER_CHEST, MAPS, MAP_REWARDS, RARITY, RARITY_COLORS, SHARDS, MERCHANT_PRICES } from './data.js';
+import { APPLE_SKINS, BOWL_SKINS, CHESTS, POWERUPS, POWER_CHEST, MAPS, MAP_REWARDS, RARITY, RARITY_COLORS, SHARDS } from './data.js';
 import { writeSave } from './save.js';
 import { getPowerCount, addPower } from './powerups.js';
 import { drawApple, drawBowl, drawChest } from './render.js';
@@ -95,7 +95,6 @@ export function renderShop() {
   renderMapRewards();
   renderMapGrid();
   renderShardGrid();
-  renderMerchantGrid();
 }
 
 export function renderChestGrid() {
@@ -312,13 +311,13 @@ export function buyChest(id) {
   const alreadyHave = skin.id === 'classic' || ownedArr.includes(skin.id);
   if (!alreadyHave) { ownedArr.push(skin.id); writeSave(); }
 
-  // ~8% bonus chance to also get a shard
+  // ~25% bonus chance to also get a shard
   var shardDrop = null;
-  if (Math.random() < 0.08) {
+  if (Math.random() < 0.25) {
     if (!state.save.shards) state.save.shards = { bronze:0, silver:0, gold:0 };
     var r = Math.random();
-    if (r < 0.02)      { state.save.shards.gold++;   shardDrop = 'gold'; }
-    else if (r < 0.05) { state.save.shards.silver++; shardDrop = 'silver'; }
+    if (r < 0.08)      { state.save.shards.gold++;   shardDrop = 'gold'; }
+    else if (r < 0.30) { state.save.shards.silver++; shardDrop = 'silver'; }
     else               { state.save.shards.bronze++; shardDrop = 'bronze'; }
     writeSave();
   }
