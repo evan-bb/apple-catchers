@@ -438,6 +438,60 @@ export function drawApple(ctx, x, y, r, skinId, angle, t) {
     }
   }
 
+  // --- Easter Bunny (bunny ears + smiley face) ---
+  if (sk.special === 'easter') {
+    // Left ear
+    ctx.fillStyle = '#9c27b0';
+    ctx.beginPath();
+    ctx.ellipse(-r * 0.3, -r * 1.1, r * 0.18, r * 0.45, -0.15, 0, Math.PI * 2);
+    ctx.fill();
+    // Left inner ear (pink)
+    ctx.fillStyle = '#f48fb1';
+    ctx.beginPath();
+    ctx.ellipse(-r * 0.3, -r * 1.05, r * 0.1, r * 0.3, -0.15, 0, Math.PI * 2);
+    ctx.fill();
+    // Right ear
+    ctx.fillStyle = '#9c27b0';
+    ctx.beginPath();
+    ctx.ellipse(r * 0.3, -r * 1.1, r * 0.18, r * 0.45, 0.15, 0, Math.PI * 2);
+    ctx.fill();
+    // Right inner ear (pink)
+    ctx.fillStyle = '#f48fb1';
+    ctx.beginPath();
+    ctx.ellipse(r * 0.3, -r * 1.05, r * 0.1, r * 0.3, 0.15, 0, Math.PI * 2);
+    ctx.fill();
+    // Eyes
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.arc(-r * 0.25, -r * 0.1, r * 0.1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(r * 0.25, -r * 0.1, r * 0.1, 0, Math.PI * 2);
+    ctx.fill();
+    // Eye shines
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(-r * 0.2, -r * 0.15, r * 0.04, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(r * 0.3, -r * 0.15, r * 0.04, 0, Math.PI * 2);
+    ctx.fill();
+    // Smile
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = Math.max(1, r * 0.06);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(0, r * 0.05, r * 0.2, 0.2, Math.PI - 0.2);
+    ctx.stroke();
+    // Nose (little triangle)
+    ctx.fillStyle = '#f48fb1';
+    ctx.beginPath();
+    ctx.moveTo(0, r * 0.0);
+    ctx.lineTo(-r * 0.07, r * 0.12);
+    ctx.lineTo(r * 0.07, r * 0.12);
+    ctx.fill();
+  }
+
   // --- Dark (black body + purple shimmer + glow) ---
   if (sk.special === 'dark') {
     // Dark purple glow effect
@@ -987,6 +1041,60 @@ export function drawBowl(ctx, cx, cy, w, h, skinId, t) {
       ctx.ellipse(clx + Math.cos(a) * hw * 0.06, cly - Math.sin(a) * hw * 0.06, hw * 0.05, hw * 0.035, a, 0, Math.PI * 2);
       ctx.fill();
     }
+  }
+
+  // --- Easter Bunny bowl (ears + face) ---
+  if (sk.special === 'easter') {
+    // Left ear
+    ctx.fillStyle = '#9c27b0';
+    ctx.beginPath();
+    ctx.ellipse(-hw * 0.35, -hh * 0.7, hw * 0.12, hh * 0.45, -0.15, 0, Math.PI * 2);
+    ctx.fill();
+    // Left inner ear
+    ctx.fillStyle = '#f48fb1';
+    ctx.beginPath();
+    ctx.ellipse(-hw * 0.35, -hh * 0.65, hw * 0.07, hh * 0.3, -0.15, 0, Math.PI * 2);
+    ctx.fill();
+    // Right ear
+    ctx.fillStyle = '#9c27b0';
+    ctx.beginPath();
+    ctx.ellipse(hw * 0.35, -hh * 0.7, hw * 0.12, hh * 0.45, 0.15, 0, Math.PI * 2);
+    ctx.fill();
+    // Right inner ear
+    ctx.fillStyle = '#f48fb1';
+    ctx.beginPath();
+    ctx.ellipse(hw * 0.35, -hh * 0.65, hw * 0.07, hh * 0.3, 0.15, 0, Math.PI * 2);
+    ctx.fill();
+    // Eyes on the bowl
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.arc(-hw * 0.2, hh * 0.05, hw * 0.06, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(hw * 0.2, hh * 0.05, hw * 0.06, 0, Math.PI * 2);
+    ctx.fill();
+    // Eye shines
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(-hw * 0.17, hh * 0.01, hw * 0.025, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(hw * 0.23, hh * 0.01, hw * 0.025, 0, Math.PI * 2);
+    ctx.fill();
+    // Smile
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = Math.max(1, hw * 0.04);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(0, hh * 0.1, hw * 0.14, 0.2, Math.PI - 0.2);
+    ctx.stroke();
+    // Nose
+    ctx.fillStyle = '#f48fb1';
+    ctx.beginPath();
+    ctx.moveTo(0, hh * 0.05);
+    ctx.lineTo(-hw * 0.05, hh * 0.14);
+    ctx.lineTo(hw * 0.05, hh * 0.14);
+    ctx.fill();
   }
 
   // --- Dark bowl (black + purple shimmer) ---

@@ -26,6 +26,7 @@ export function drawMap(mapId) {
     case 'heaven':     drawHeaven();     break;
     case 'emptiness':  drawEmptiness();  break;
     case 'rainbow':    drawRainbow();    break;
+    case 'easter':     drawEaster();     break;
     default:           drawMeadow();     break;
   }
 }
@@ -2748,4 +2749,211 @@ function drawClover(ctx, x, y, s) {
     ctx.ellipse(x + Math.cos(a) * s * 0.6, y - Math.sin(a) * s * 0.6, s * 0.5, s * 0.35, a, 0, Math.PI * 2);
     ctx.fill();
   }
+}
+
+// ═══════════════════════════════════════════════════
+// EASTERLAND
+// ═══════════════════════════════════════════════════
+function drawEaster() {
+  const { ctx, W, H, frame } = state;
+
+  // Pastel sky gradient
+  const sky = ctx.createLinearGradient(0, 0, 0, H);
+  sky.addColorStop(0, '#e1bee7');
+  sky.addColorStop(0.3, '#f8bbd0');
+  sky.addColorStop(0.6, '#bbdefb');
+  sky.addColorStop(0.85, '#c8e6c9');
+  sky.addColorStop(1, '#66bb6a');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W, H);
+
+  // Sun with warm glow
+  ctx.save();
+  ctx.shadowColor = '#fff9c4';
+  ctx.shadowBlur = 40;
+  ctx.fillStyle = '#fff176';
+  ctx.beginPath();
+  ctx.arc(W * 0.82, H * 0.1, Math.min(W, H) * 0.06, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Pastel clouds
+  cloud(W * 0.15 + Math.sin(frame * 0.003) * 8, H * 0.08, W * 0.1, 'rgba(248,187,208,0.6)');
+  cloud(W * 0.55 + Math.cos(frame * 0.002) * 6, H * 0.06, W * 0.08, 'rgba(225,190,231,0.6)');
+  cloud(W * 0.38 + Math.sin(frame * 0.0025) * 5, H * 0.14, W * 0.07, 'rgba(187,222,251,0.5)');
+
+  // Rolling green hills
+  ctx.fillStyle = '#81c784';
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  for (let x = 0; x <= W; x += 3) {
+    ctx.lineTo(x, H - 55 + Math.sin(x * 0.007) * 20 + Math.sin(x * 0.02) * 8);
+  }
+  ctx.lineTo(W, H);
+  ctx.fill();
+
+  // Foreground ground
+  curvedGround('#66bb6a', '#4caf50', 24, 16);
+
+  // Easter eggs scattered around
+  var eggColors = [
+    ['#f48fb1','#f06292','#fff'],
+    ['#81d4fa','#4fc3f7','#fff'],
+    ['#fff176','#ffee58','#fff'],
+    ['#ce93d8','#ba68c8','#fff'],
+    ['#a5d6a7','#81c784','#fff'],
+    ['#ffab91','#ff8a65','#fff'],
+  ];
+  var eggPositions = [
+    [0.08, 0.88], [0.22, 0.85], [0.35, 0.9], [0.5, 0.86],
+    [0.65, 0.89], [0.78, 0.87], [0.92, 0.88],
+    [0.15, 0.92], [0.45, 0.93], [0.72, 0.91],
+  ];
+  for (var i = 0; i < eggPositions.length; i++) {
+    var ex = W * eggPositions[i][0];
+    var ey = H * eggPositions[i][1];
+    var ec = eggColors[i % eggColors.length];
+    var es = Math.min(W, H) * 0.025;
+    // Egg body
+    ctx.fillStyle = ec[0];
+    ctx.beginPath();
+    ctx.ellipse(ex, ey, es * 0.7, es, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Stripe
+    ctx.fillStyle = ec[1];
+    ctx.fillRect(ex - es * 0.7, ey - es * 0.15, es * 1.4, es * 0.3);
+    // Dots on stripe
+    ctx.fillStyle = ec[2];
+    ctx.beginPath();
+    ctx.arc(ex - es * 0.3, ey, es * 0.08, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ex + es * 0.3, ey, es * 0.08, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Easter Bunny (center-right, sitting on the ground)
+  var bx = W * 0.7;
+  var by = H * 0.72;
+  var bs = Math.min(W, H) * 0.12;
+
+  // Body (big round)
+  ctx.fillStyle = '#f5f5f5';
+  ctx.beginPath();
+  ctx.ellipse(bx, by + bs * 0.3, bs * 0.6, bs * 0.7, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Head
+  ctx.beginPath();
+  ctx.arc(bx, by - bs * 0.45, bs * 0.42, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Left ear
+  ctx.fillStyle = '#f5f5f5';
+  ctx.beginPath();
+  ctx.ellipse(bx - bs * 0.2, by - bs * 1.1, bs * 0.12, bs * 0.38, -0.1, 0, Math.PI * 2);
+  ctx.fill();
+  // Left inner ear
+  ctx.fillStyle = '#f48fb1';
+  ctx.beginPath();
+  ctx.ellipse(bx - bs * 0.2, by - bs * 1.05, bs * 0.07, bs * 0.25, -0.1, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Right ear
+  ctx.fillStyle = '#f5f5f5';
+  ctx.beginPath();
+  ctx.ellipse(bx + bs * 0.2, by - bs * 1.1, bs * 0.12, bs * 0.38, 0.1, 0, Math.PI * 2);
+  ctx.fill();
+  // Right inner ear
+  ctx.fillStyle = '#f48fb1';
+  ctx.beginPath();
+  ctx.ellipse(bx + bs * 0.2, by - bs * 1.05, bs * 0.07, bs * 0.25, 0.1, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Eyes
+  ctx.fillStyle = '#333';
+  ctx.beginPath();
+  ctx.arc(bx - bs * 0.15, by - bs * 0.5, bs * 0.06, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(bx + bs * 0.15, by - bs * 0.5, bs * 0.06, 0, Math.PI * 2);
+  ctx.fill();
+  // Eye shines
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(bx - bs * 0.12, by - bs * 0.53, bs * 0.025, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(bx + bs * 0.18, by - bs * 0.53, bs * 0.025, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Nose
+  ctx.fillStyle = '#f48fb1';
+  ctx.beginPath();
+  ctx.moveTo(bx, by - bs * 0.42);
+  ctx.lineTo(bx - bs * 0.06, by - bs * 0.35);
+  ctx.lineTo(bx + bs * 0.06, by - bs * 0.35);
+  ctx.fill();
+
+  // Smile
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = Math.max(1, bs * 0.03);
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.arc(bx, by - bs * 0.35, bs * 0.12, 0.2, Math.PI - 0.2);
+  ctx.stroke();
+
+  // Arm holding basket (left arm reaching right)
+  ctx.fillStyle = '#f5f5f5';
+  ctx.beginPath();
+  ctx.ellipse(bx + bs * 0.45, by + bs * 0.1, bs * 0.12, bs * 0.3, 0.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Basket
+  var bkx = bx + bs * 0.65;
+  var bky = by + bs * 0.05;
+  var bkw = bs * 0.4;
+  var bkh = bs * 0.3;
+  // Basket body
+  ctx.fillStyle = '#8d6e63';
+  ctx.beginPath();
+  ctx.moveTo(bkx - bkw, bky);
+  ctx.lineTo(bkx - bkw * 0.7, bky + bkh);
+  ctx.lineTo(bkx + bkw * 0.7, bky + bkh);
+  ctx.lineTo(bkx + bkw, bky);
+  ctx.closePath();
+  ctx.fill();
+  // Basket weave lines
+  ctx.strokeStyle = '#6d4c41';
+  ctx.lineWidth = Math.max(1, bs * 0.02);
+  ctx.beginPath();
+  ctx.moveTo(bkx - bkw * 0.9, bky + bkh * 0.35);
+  ctx.lineTo(bkx + bkw * 0.9, bky + bkh * 0.35);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(bkx - bkw * 0.8, bky + bkh * 0.7);
+  ctx.lineTo(bkx + bkw * 0.8, bky + bkh * 0.7);
+  ctx.stroke();
+  // Handle
+  ctx.strokeStyle = '#8d6e63';
+  ctx.lineWidth = Math.max(2, bs * 0.04);
+  ctx.beginPath();
+  ctx.arc(bkx, bky - bkh * 0.3, bkw * 0.7, Math.PI, 0);
+  ctx.stroke();
+
+  // Eggs in basket
+  var basketEggs = [['#f48fb1', -0.3], ['#81d4fa', 0], ['#fff176', 0.3]];
+  for (var j = 0; j < basketEggs.length; j++) {
+    ctx.fillStyle = basketEggs[j][0];
+    ctx.beginPath();
+    ctx.ellipse(bkx + bkw * basketEggs[j][1], bky - bs * 0.03, bs * 0.06, bs * 0.08, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Small flowers in the grass
+  flower(W * 0.12, H - 20, 3, '#f48fb1');
+  flower(W * 0.3, H - 18, 2.5, '#ce93d8');
+  flower(W * 0.55, H - 20, 3, '#fff176');
+  flower(W * 0.85, H - 19, 2, '#81d4fa');
+  flower(W * 0.42, H - 17, 2, '#ffab91');
 }

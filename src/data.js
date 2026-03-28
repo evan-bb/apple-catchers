@@ -19,6 +19,7 @@ export const APPLE_SKINS = [
   { id:'demon',   name:'Demon',   body:'#8b0000', dark:'#4a0000', shine:'#ff4444', leaf:'#2a0000', stem:'#1a0000', special:'demon' },
   { id:'angel',   name:'Angel',   body:'#f0f0ff', dark:'#c8c8e8', shine:'#ffffff', leaf:'#d4af37', stem:'#c0a030', special:'angel' },
   { id:'leprechaun', name:'Leprechaun', body:'#43a047', dark:'#2e7d32', shine:'#a5d6a7', leaf:'#1b5e20', stem:'#33691e', special:'leprechaun', event:true },
+  { id:'easter',  name:'Easter Bunny', body:'#9c27b0', dark:'#6a1b9a', shine:'#e1bee7', leaf:'#7b1fa2', stem:'#4a148c', special:'easter', event:true },
   { id:'neon',    name:'Neon',    body:'#00e676', dark:'#00c853', shine:'#b9f6ca', leaf:'#76ff03', stem:'#64dd17', special:'neon', shardOnly:true },
   { id:'ice',     name:'Ice',     body:'#b3e5fc', dark:'#81d4fa', shine:'#e1f5fe', leaf:'#4fc3f7', stem:'#90caf9', special:'ice', shardOnly:true },
   { id:'ghost',   name:'Ghost',   body:'#e0e0e0', dark:'#bdbdbd', shine:'#ffffff', leaf:'#9e9e9e', stem:'#757575', special:'ghost', shardOnly:true },
@@ -43,6 +44,7 @@ export const BOWL_SKINS = [
   { id:'demon',   name:'Demon',   rim:'#4a0000', body:'#8b0000', inside:'#3a0000', dark:'#2a0000', special:'demon' },
   { id:'angel',   name:'Angel',   rim:'#d0d0e8', body:'#f0f0ff', inside:'#ffffff', dark:'#b0b0d0', special:'angel' },
   { id:'leprechaun', name:'Leprechaun', rim:'#2e7d32', body:'#43a047', inside:'#a5d6a7', dark:'#1b5e20', special:'leprechaun', event:true },
+  { id:'easter',  name:'Easter Bunny', rim:'#6a1b9a', body:'#9c27b0', inside:'#e1bee7', dark:'#4a148c', special:'easter', event:true },
   { id:'neon',    name:'Neon',    rim:'#00e676', body:'#00c853', inside:'#b9f6ca', dark:'#00e676', special:'neon', shardOnly:true },
   { id:'ice',     name:'Ice',     rim:'#81d4fa', body:'#b3e5fc', inside:'#e1f5fe', dark:'#4fc3f7', special:'ice', shardOnly:true },
   { id:'ghost',   name:'Ghost',   rim:'#bdbdbd', body:'#e0e0e0', inside:'#fafafa', dark:'#9e9e9e', special:'ghost', shardOnly:true },
@@ -54,17 +56,17 @@ export const BOWL_SKINS = [
 // Chests — rewards are arrays of skin IDs that can drop
 export const CHESTS = [
   { id:'wooden',  name:'Wooden',  cost:50,  topCol:'#5d4037', bodyCol:'#795548', lockCol:'#ffd600',
-    appleRewards:['golden','green'], bowlRewards:['wood','silver'] },
+    appleRewards:['golden','green','easter'], bowlRewards:['wood','silver','easter'] },
   { id:'silver',  name:'Silver',  cost:150, topCol:'#9e9e9e', bodyCol:'#e0e0e0', lockCol:'#ffd600',
-    appleRewards:['golden','green','pink'], bowlRewards:['silver','crystal'] },
+    appleRewards:['golden','green','pink','easter'], bowlRewards:['silver','crystal','easter'] },
   { id:'golden',  name:'Golden',  cost:300, topCol:'#f9a825', bodyCol:'#ffd600', lockCol:'#fff',
-    appleRewards:['rainbow','diamond','galaxy'], bowlRewards:['golden','crystal','lava'] },
+    appleRewards:['rainbow','diamond','galaxy','easter'], bowlRewards:['golden','crystal','lava','easter'] },
   { id:'mystery', name:'Mystery', cost:200, topCol:'#7c4dff', bodyCol:'#5c35c5', lockCol:'#e040fb',
-    appleRewards:['pink','golden','galaxy','rainbow','diamond'], bowlRewards:['crystal','golden','galaxy','rainbow'] },
+    appleRewards:['pink','golden','galaxy','rainbow','diamond','easter'], bowlRewards:['crystal','golden','galaxy','rainbow','easter'] },
   { id:'crystal', name:'Crystal', cost:500, topCol:'#00bcd4', bodyCol:'#b2ebf2', lockCol:'#fff',
-    appleRewards:['diamond','galaxy','rainbow','lava','demon','angel'], bowlRewards:['crystal','galaxy','rainbow','lava','demon','angel'] },
+    appleRewards:['diamond','galaxy','rainbow','lava','demon','angel','easter'], bowlRewards:['crystal','galaxy','rainbow','lava','demon','angel','easter'] },
   { id:'mega',    name:'Mega',    cost:100, topCol:'#e65100', bodyCol:'#ff8f00', lockCol:'#ffd600',
-    appleRewards:['golden','green','pink','diamond'], bowlRewards:['wood','silver','golden','crystal'] },
+    appleRewards:['golden','green','pink','diamond','easter'], bowlRewards:['wood','silver','golden','crystal','easter'] },
 ];
 
 // Power-ups
@@ -107,13 +109,14 @@ export const MAPS = [
   { id:'heaven',    name:'Heaven',     emoji:'😇', req:1000,desc:'Catch 1000 apples total' },
   { id:'emptiness', name:'Emptiness',  emoji:'⬜', req:1100,desc:'Catch 1100 apples total' },
   { id:'rainbow',   name:'Rainbow',    emoji:'🌈', req:1200,desc:'Catch 1200 apples total' },
+  { id:'easter',    name:'Easterland', emoji:'🐰', req:1300,desc:'Catch 1300 apples total' },
 ];
 
 // Rarity for every skin (apple + bowl share IDs where they overlap)
 export const RARITY = {
   // Apple skins
   classic:'common', green:'common', pink:'common',
-  golden:'uncommon', smiley:'uncommon', leprechaun:'uncommon',
+  golden:'uncommon', smiley:'uncommon', leprechaun:'uncommon', easter:'uncommon',
   galaxy:'rare', lava:'rare', pixel:'rare',
   rainbow:'epic', diamond:'epic', dog:'epic',
   comet:'exotic', solar:'exotic', dune:'exotic', aurora:'exotic', sugar:'exotic',
