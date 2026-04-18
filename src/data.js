@@ -56,17 +56,17 @@ export const BOWL_SKINS = [
 // Chests — rewards are arrays of skin IDs that can drop
 export const CHESTS = [
   { id:'wooden',  name:'Wooden',  cost:50,  topCol:'#5d4037', bodyCol:'#795548', lockCol:'#ffd600',
-    appleRewards:['golden','green','easter'], bowlRewards:['wood','silver','easter'] },
+    appleRewards:['golden','green'], bowlRewards:['wood','silver'] },
   { id:'silver',  name:'Silver',  cost:150, topCol:'#9e9e9e', bodyCol:'#e0e0e0', lockCol:'#ffd600',
-    appleRewards:['golden','green','pink','easter'], bowlRewards:['silver','crystal','easter'] },
+    appleRewards:['golden','green','pink'], bowlRewards:['silver','crystal'] },
   { id:'golden',  name:'Golden',  cost:300, topCol:'#f9a825', bodyCol:'#ffd600', lockCol:'#fff',
-    appleRewards:['rainbow','diamond','galaxy','easter'], bowlRewards:['golden','crystal','lava','easter'] },
+    appleRewards:['rainbow','diamond','galaxy'], bowlRewards:['golden','crystal','lava'] },
   { id:'mystery', name:'Mystery', cost:200, topCol:'#7c4dff', bodyCol:'#5c35c5', lockCol:'#e040fb',
-    appleRewards:['pink','golden','galaxy','rainbow','diamond','easter'], bowlRewards:['crystal','golden','galaxy','rainbow','easter'] },
+    appleRewards:['pink','golden','galaxy','rainbow','diamond'], bowlRewards:['crystal','golden','galaxy','rainbow'] },
   { id:'crystal', name:'Crystal', cost:500, topCol:'#00bcd4', bodyCol:'#b2ebf2', lockCol:'#fff',
-    appleRewards:['diamond','galaxy','rainbow','lava','demon','angel','easter'], bowlRewards:['crystal','galaxy','rainbow','lava','demon','angel','easter'] },
+    appleRewards:['diamond','galaxy','rainbow','lava','demon','angel'], bowlRewards:['crystal','galaxy','rainbow','lava','demon','angel'] },
   { id:'mega',    name:'Mega',    cost:100, topCol:'#e65100', bodyCol:'#ff8f00', lockCol:'#ffd600',
-    appleRewards:['golden','green','pink','diamond','easter'], bowlRewards:['wood','silver','golden','crystal','easter'] },
+    appleRewards:['golden','green','pink','diamond'], bowlRewards:['wood','silver','golden','crystal'] },
 ];
 
 // Power-ups
